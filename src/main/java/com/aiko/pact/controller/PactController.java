@@ -14,12 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONObject;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,7 +45,7 @@ import com.github.pagehelper.PageInfo;
 @CrossOrigin("*")
 @RequestMapping("/pact")
 public class PactController {
-	private Logger logger = LoggerFactory.getLogger(getClass());
+	//private Logger logger = LoggerFactory.getLogger(getClass());
 	private static String modiContractID;
 	private static String showContractID;
 	@Autowired

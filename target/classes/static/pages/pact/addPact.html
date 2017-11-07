@@ -217,9 +217,6 @@ function fuzhi(){
 	}else if($("#employee2").combobox("getValue") == ""){
 		$.messager.alert('提示','请选择销售雇员');
 		event.preventDefault();
-	}else if($("#resThree").textbox("getValue") == ""){
-		$.messager.alert('提示','请输入客户采购编码');
-		event.preventDefault();
 	}else{
 		 var fileNames = document.getElementsByName('fileName')
 		 var x =""
@@ -322,7 +319,7 @@ function fuzhi(){
 						<td>客户采购编码：</td>
 						<td><input style="width: 180px" class="easyui-textbox"
 							id="resThree" type="text" name="purchaseNo" 
-							data-options="prompt:'请输入客户采购编码',required:true" /></td>
+							data-options="prompt:'请输入客户采购编码'" /></td>
 						<td width="100"></td>
 						<td>有效期从：</td>
 						<td><input class="easyui-datebox" id="statime" name="staTime"
