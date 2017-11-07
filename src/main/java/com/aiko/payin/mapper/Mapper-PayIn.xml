@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aiko.payin.dao.PayInDao">
+	<resultMap id="ContractMap" type="com.aiko.pact.dto.AikoContract" >
+	    <id column="CONTRACT_ID" property="contractId" jdbcType="VARCHAR" />
+	    <result column="CONTRACT_NO" property="contractNo" jdbcType="VARCHAR" />
+	    <result column="PURCHASE_NO" property="purchaseNo" jdbcType="VARCHAR" />
+	    <result column="SALE_GROUP" property="saleGroup" jdbcType="VARCHAR" />
+	    <result column="SALE_ORG" property="saleOrg" jdbcType="VARCHAR" />
+	    <result column="CUSTOMER_NO" property="customerNo" jdbcType="VARCHAR" />
+	    <result column="CUSTOMER_NAME" property="customerName" jdbcType="VARCHAR" />
+	    <result column="SUM" property="sum" jdbcType="DECIMAL" />
+	    <result column="CURRENCY" property="currency" jdbcType="VARCHAR" />
+	    <result column="PAYMENT_WAY" property="paymentWay" jdbcType="VARCHAR" />
+	    <result column="PAYMENT_TERM" property="paymentTerm" jdbcType="VARCHAR" />
+	    <result column="EMPLOYEE" property="employee" jdbcType="VARCHAR" />
+	    <result column="STA_TIME" property="staTime" jdbcType="DATE" />
+	    <result column="END_TIME" property="endTime" jdbcType="DATE" />
+	    <result column="STATE" property="state" jdbcType="VARCHAR" />
+	    <result column="CONTRACT_TYPE" property="contractType" jdbcType="VARCHAR" />
+	    <result column="ISFORMATE" property="isformate" jdbcType="VARCHAR" />
+	    <result column="SERVICE_MODEL" property="serviceModel" jdbcType="VARCHAR" />
+	    <result column="RES_ONE" property="resOne" jdbcType="VARCHAR" />
+	    <result column="RES_TWO" property="resTwo" jdbcType="VARCHAR" />
+	    <result column="RES_THREE" property="resThree" jdbcType="VARCHAR" />
+	    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="PRO_NO" property="proNo" jdbcType="VARCHAR" />
+	    <result column="SALE_WAY" property="saleWay" jdbcType="VARCHAR" />
+	    <result column="SALE_FUNC" property="saleFunc" jdbcType="VARCHAR" />
+	    <result column="PERIOD" property="period" jdbcType="INTEGER" />
+	    <result column="TRADE_TERM" property="tradeTerm" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="findContractList" resultMap="ContractMap" parameterType="java.util.Map">
+		select * from aiko_contract
+		<where>
+			<if test="customerCode!=null and customerCode!=''">
+				<bind name="like_custcode" value="'%' + customerCode + '%'" />
+				and customer_no=#{like_custcode}
+			</if>
+			<if test="customerName!=null and customerName!=''">
+				<bind name="like_custname" value="'%' + customerName + '%'" />
+				and customer_name like #{like_custname}
+			</if>
+			<if test="contractNo!=null and contractNo!=''">
+				<bind name="like_contractno" value="'%' + contractNo + '%'" />
+				and contract_no like #{like_contractno}
+			</if>
+			<if test="startDate!=null and startDate!=''">
+				<![CDATA[and create_time >=#{startDate}]]>
+			</if>
+			<if test="endDate!=null and endDate!=''">
+				<![CDATA[and create_time <=#{endDate}]]>
+			</if>
+		</where>
+		order by contract_no desc
+	</select>
+
+	<resultMap id="PayPlanMap" type="com.aiko.payplan.model.PayPlan">
+	</resultMap>
+	<select id="findPayPlanList" resultMap="PayPlanMap" parameterType="java.util.Map">
+		select * from aiko_pay_plan 
+		<where>
+			<if test="where!=null and where!=''">
+				#{where}
+			</if>
+			<if test="contract_no!=null and contract_no!=''">
+ 				and contract_no=#{contract_no}			
+			</if>
+			
+		</where>
+		
+		 order by plan_num asc		
+	</select>
+	
+	<resultMap id="PayInMap" type="com.aiko.payin.model.PayIn">
+	</resultMap>
+	<select id="findPayInList" resultMap="PayInMap" parameterType="java.util.Map">
+		select * from aiko_pay_in a
+		<where>
+			exists (select 1 from aiko_contract b 
+				where a.contract_no=b.contract_no
+				<if test="customer_no!=null and customer_no!=''">
+					<bind name="like_custcode" value="'%' + customer_no + '%'" />
+					and customer_no=#{like_custcode}
+				</if>
+				<if test="customer_name!=null and customer_name!=''">
+					<bind name="like_custname" value="'%' + customer_name + '%'" />
+					and customer_name like #{like_custname}
+				</if>
+				<if test="contract_no!=null and contract_no!=''">
+					<bind name="like_contractno" value="'%' + contract_no + '%'" />
+					and contract_no like #{like_contractno}
+				</if>
+				<if test="pro_no!=null and pro_no!=''">
+					<bind name="like_prono" value="'%' + pro_no + '%'" />
+					and pro_no like #{like_prono}
+				</if>
+				<if test="employee!=null and employee!=''">
+					and employee =#{employee}
+				</if>
+			)
+			<if test="plan_no!=null and plan_no!=''">
+				and plan_no=#{plan_no} 
+			</if>
+			<if test="plan_num!=null and plan_num!=''">
+				and plan_num=#{plan_num} 
+			</if>
+		</where>		
+		order by plan_num asc		
+	</select>
+	
+	<select id="findPayInByIds" resultMap="PayInMap" parameterType="java.util.Map">
+		select * from aiko_pay_in a 
+		where id in
+		<foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		<if test="status!=null and status!=''">
+			and status=#{status}
+		</if>	
+	</select>
+	
+	<insert id="addPayIn" parameterType="com.aiko.payin.model.PayIn">
+       <![CDATA[
+       INSERT INTO aiko_pay_in
+       (
+           id,
+           contract_no,
+           plan_num,
+           plan_no,
+           pay_in_no,
+           receipt_amount,
+           receipt_date,
+           receipt_way,
+           receipt_bill,
+           payer,
+           pay_in_amount,
+           pay_in_date,
+           create_user_id,
+           create_user_name,
+           status,
+           note
+       )
+       VALUES
+       (
+           #{id, jdbcType=VARCHAR},
+           #{contract_no, jdbcType=VARCHAR},
+           #{plan_num, jdbcType=INTEGER},
+           #{plan_no, jdbcType=VARCHAR},
+           #{pay_in_no, jdbcType=VARCHAR},
+           #{receipt_amount,jdbcType=NUMERIC},
+           #{receipt_date},
+           #{receipt_way, jdbcType=VARCHAR},
+           #{receipt_bill,jdbcType=VARCHAR},
+           #{payer, jdbcType=VARCHAR},
+           #{pay_in_amount,jdbcType=NUMERIC},
+           #{pay_in_date},
+           #{create_user_id, jdbcType=VARCHAR},
+           #{create_user_name, jdbcType=VARCHAR},
+           #{status, jdbcType=VARCHAR},
+           #{note, jdbcType=VARCHAR}           
+       )
+       ]]>
+   </insert>
+	
+	<delete id="deletePayin" parameterType="java.lang.String">
+		delete from aiko_pay_in where id=#{id} and status not in('已确认')
+	</delete>
+	
+	<update id="updatePayInAudit" parameterType="com.aiko.payin.model.PayIn">
+		update aiko_pay_in set audit_version=audit_version+1
+		,status=#{status}
+		,audit_user_id=#{audit_user_id}
+		,audit_user_name=#{audit_user_name}
+		,audit_dt=#{audit_dt}
+		 where id=#{id} and audit_version=#{audit_version}
+	</update>
+	
+	<update id="updatePayPlanAudit" parameterType="com.aiko.payplan.model.PayPlan">
+		update aiko_pay_plan set version=version+1
+		,paid_amount=#{paid_amount}
+		,rest_amount=#{rest_amount}
+		where id=#{id} and version=#{version}
+	</update>
+	
+</mapper>	

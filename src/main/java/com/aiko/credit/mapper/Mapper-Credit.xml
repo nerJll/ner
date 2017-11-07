@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aiko.credit.dao.CreditDao">
+	<resultMap id="CreditMap" type="com.aiko.credit.model.Credit">
+		<result column="id" property="id" />
+		<result column="customer_code" property="customerCode" />
+		<result column="customer_name" property="customerName" />
+		<result column="amount" property="amount" />
+		<result column="used_amount" property="usedAmount" />
+		<result column="remaining_amount" property="remainingAmount" />
+		<result column="start_date" property="startDate"/>
+		<result column="end_date" property="endDate" />
+		<result column="create_date" property="createDate" />
+		<result column="create_user" property="createUser" />
+		<result column="status" property="status" />
+		<result column="type" property="type" />
+		<result column="des" property="des" />
+	</resultMap>
+
+	<select id="getCredit" resultMap="CreditMap" parameterType="java.lang.String">
+		select * from aiko_credit t where t.id=#{id}
+	</select>
+	
+	<select id="findCredit" resultMap="CreditMap" parameterType="java.util.Map">
+		select * from aiko_credit t
+		<where>     
+			<if test="id!=null and id!=''">
+				and t.id=#{id}
+			</if>     
+			<if test="customerCode!=null and customerCode!=''">
+				<bind name="like_customerCode" value="'%' + customerCode + '%'" />
+				and t.customer_code like #{like_customerCode}
+			</if> 
+			<if test="customerName!=null and customerName!=''">
+				<bind name="like_customerName" value="'%' + customerName + '%'" />
+				and t.customer_name like #{like_customerName}
+			</if>
+			<if test="status!=null and status!=''">
+				and t.status=#{status}
+			</if>
+		</where> 
+		order by t.create_date desc
+	</select>
+	
+	<insert id="addCredit" parameterType="com.aiko.credit.model.Credit">
+       <![CDATA[
+       INSERT INTO aiko_credit 
+       (
+           id,
+           customer_code,
+           customer_name,
+           amount,
+           used_amount,
+           remaining_amount,
+           start_date,
+           end_date,
+           create_date,
+           create_user,
+           status,
+           type,
+           des
+       )
+       VALUES
+       (
+           #{id, jdbcType=VARCHAR},
+           #{customerCode, jdbcType=VARCHAR},
+           #{customerName, jdbcType=VARCHAR},
+           #{amount, jdbcType=DECIMAL},
+           #{usedAmount, jdbcType=DECIMAL},
+           #{remainingAmount, jdbcType=DECIMAL},
+           #{startDate, jdbcType=TIMESTAMP},
+           #{endDate, jdbcType=TIMESTAMP},
+           #{createDate, jdbcType=TIMESTAMP},
+           #{createUser, jdbcType=VARCHAR},
+           #{status, jdbcType=INTEGER},
+           #{type, jdbcType=INTEGER},
+           #{des, jdbcType=VARCHAR}
+       )
+       ]]>
+   </insert>
+
+   <update id="updateCredit" parameterType="com.aiko.credit.model.Credit">
+        update aiko_credit set customer_code=#{customerCode},customer_name=#{customerName},amount=#{amount},used_amount=#{usedAmount},remaining_amount=#{remainingAmount},start_date=#{startDate},end_date=#{endDate},status=#{status},type=#{type},des=#{des} where id=#{id}
+   </update>
+   
+   <delete id="deleteCredit" parameterType="java.lang.String">
+        delete from aiko_credit where id=#{id}
+   </delete>
+</mapper>

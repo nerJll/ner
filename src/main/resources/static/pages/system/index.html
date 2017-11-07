@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>广东爱康太阳能科技有限公司</title>
+<link rel="bookmark" type="image/x-icon" href="${ctx}/images/ak.ico"/>
+<link rel="shortcut icon" href="${ctx}/images/ak.ico">
+<link rel="icon" href="${ctx}/images/ak.ico">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<link rel="stylesheet" type="text/css" href="${ctx}/js/sccl/common/css/sccl.css">
+<link rel="stylesheet" type="text/css" href="${ctx}/js/sccl/common/skin/qingxin/skin.css" id="layout-skin" />
+<script src="${ctx}/js/jquery/jquery-2.1.1.min.js"></script>
+<script src="${ctx}/js/layer/layer.js"></script>
+<script src="${ctx}/js/layui/layui.js" charset="utf-8"></script>
+<script  src="${ctx}/js/jquery/jquery.form.js"></script>
+<script  src="${ctx}/js/jquery/jTemplates/jquery-jtemplates.js"></script>
+<script src="${ctx}/js/jquery/common.js"></script>
+<style>
+textarea.jstemplate {
+	display: none;
+}
+</style>
+</head>
+<body>
+	<div class="layout-admin">
+		<header class="layout-header">
+			<span class="header-logo">爱康CRM系统</span> 
+			 <a class="header-menu-btn" href="javascript:;"><i class="icon-font">&#xe600;</i></a>
+			 <ul class="header-bar" id="user-info" >				
+				<textarea id="user-info-tpl" class="jstemplate">
+					<li class="header-bar-nav">
+					<a href="/aiko-home/system/index">返回门户</a></li>
+					<li class="header-bar-nav">
+						<a href="javascript:;">{$T.deptname}-{$T.name}</a>
+					</li>
+				</textarea>
+			</ul>
+		</header>
+		
+		<aside class="layout-side">
+			<ul class="side-menu"></ul>
+		</aside>
+		<div class="layout-side-arrow">
+			<div class="layout-side-arrow-icon">
+				<i class="icon-font">&#xe60d;</i>
+			</div>
+		</div>
+		<section class="layout-main">
+			<div id="maintab"  class="layout-main-tab">
+				<button class="tab-btn btn-left">
+					<i class="icon-font">&#xe60e;</i>
+				</button>
+				<nav class="tab-nav">
+					<div class="tab-nav-content">
+						 <a href="javascript:;" class="content-tab active" data-id="/aiko-crm/pact/index">合同管理</a>
+					</div>
+				</nav>
+				<button class="tab-btn btn-right">
+					<i class="icon-font">&#xe60f;</i>
+				</button>
+			</div>
+			<div id="mainbody" class="layout-main-body" >
+				<iframe class="body-iframe" style="padding-top: 5px" name="iframe0" width="100%" height="99%" src="/aiko-crm/pact/index" frameborder="0" data-id="/aiko-crm/pact/index" seamless></iframe>
+			</div>
+		</section>
+		<div class="layout-footer">版权所有 © 2017 广东爱康太阳能科技有限公司</div>
+	</div>
+	<input type="hidden" id="CONTEXT-PATH" value="${ctx}"/>
+	<input type="hidden" id="APP-CODE" value="${APP-CODE}"/>
+</body>
+<script type="text/javascript" src="${ctx}/js/sccl/common/js/sccl.js"></script>
+<script type="text/javascript">
+$(function() {
+	initialize4Element("user-info", "${ctx}/system/current-user", {});
+});
+</script>
+</html>

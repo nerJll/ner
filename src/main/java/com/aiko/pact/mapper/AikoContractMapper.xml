@@ -1,0 +1,560 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aiko.pact.dao.AikoContractMapper" >
+  <resultMap id="BaseResultMap" type="com.aiko.pact.dto.AikoContract" >
+    <id column="CONTRACT_ID" property="contractId" jdbcType="VARCHAR" />
+    <result column="CONTRACT_NO" property="contractNo" jdbcType="VARCHAR" />
+    <result column="PURCHASE_NO" property="purchaseNo" jdbcType="VARCHAR" />
+    <result column="SALE_GROUP" property="saleGroup" jdbcType="VARCHAR" />
+    <result column="SALE_ORG" property="saleOrg" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_NO" property="customerNo" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_NAME" property="customerName" jdbcType="VARCHAR" />
+    <result column="SUM" property="sum" jdbcType="DECIMAL" />
+    <result column="CURRENCY" property="currency" jdbcType="VARCHAR" />
+    <result column="PAYMENT_WAY" property="paymentWay" jdbcType="VARCHAR" />
+    <result column="PAYMENT_TERM" property="paymentTerm" jdbcType="VARCHAR" />
+    <result column="EMPLOYEE" property="employee" jdbcType="VARCHAR" />
+    <result column="STA_TIME" property="staTime" jdbcType="DATE" />
+    <result column="END_TIME" property="endTime" jdbcType="DATE" />
+    <result column="STATE" property="state" jdbcType="VARCHAR" />
+    <result column="CONTRACT_TYPE" property="contractType" jdbcType="VARCHAR" />
+    <result column="ISFORMATE" property="isformate" jdbcType="VARCHAR" />
+    <result column="SERVICE_MODEL" property="serviceModel" jdbcType="VARCHAR" />
+    <result column="RES_ONE" property="resOne" jdbcType="VARCHAR" />
+    <result column="RES_TWO" property="resTwo" jdbcType="VARCHAR" />
+    <result column="RES_THREE" property="resThree" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="PRO_NO" property="proNo" jdbcType="VARCHAR" />
+    <result column="SALE_WAY" property="saleWay" jdbcType="VARCHAR" />
+    <result column="SALE_FUNC" property="saleFunc" jdbcType="VARCHAR" />
+    <result column="PERIOD" property="period" jdbcType="INTEGER" />
+    <result column="TRADE_TERM" property="tradeTerm" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    CONTRACT_ID, CONTRACT_NO, PURCHASE_NO, SALE_GROUP, SALE_ORG, CUSTOMER_NO, CUSTOMER_NAME, 
+    SUM, CURRENCY, PAYMENT_WAY, PAYMENT_TERM, EMPLOYEE, STA_TIME, END_TIME, STATE, CONTRACT_TYPE, 
+    ISFORMATE, SERVICE_MODEL, RES_ONE, RES_TWO, RES_THREE, CREATE_TIME, PRO_NO, SALE_WAY, 
+    SALE_FUNC, PERIOD, TRADE_TERM
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.aiko.pact.dto.AikoContractExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from aiko_contract
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from aiko_contract
+    where CONTRACT_ID = #{contractId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from aiko_contract
+    where CONTRACT_ID = #{contractId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.aiko.pact.dto.AikoContractExample" >
+    delete from aiko_contract
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.aiko.pact.dto.AikoContract" >
+    insert into aiko_contract (CONTRACT_ID, CONTRACT_NO, PURCHASE_NO, 
+      SALE_GROUP, SALE_ORG, CUSTOMER_NO, 
+      CUSTOMER_NAME, SUM, CURRENCY, 
+      PAYMENT_WAY, PAYMENT_TERM, EMPLOYEE, 
+      STA_TIME, END_TIME, STATE, 
+      CONTRACT_TYPE, ISFORMATE, SERVICE_MODEL, 
+      RES_ONE, RES_TWO, RES_THREE, 
+      CREATE_TIME, PRO_NO, SALE_WAY, 
+      SALE_FUNC, PERIOD, TRADE_TERM
+      )
+    values (#{contractId,jdbcType=VARCHAR}, #{contractNo,jdbcType=VARCHAR}, #{purchaseNo,jdbcType=VARCHAR}, 
+      #{saleGroup,jdbcType=VARCHAR}, #{saleOrg,jdbcType=VARCHAR}, #{customerNo,jdbcType=VARCHAR}, 
+      #{customerName,jdbcType=VARCHAR}, #{sum,jdbcType=DECIMAL}, #{currency,jdbcType=VARCHAR}, 
+      #{paymentWay,jdbcType=VARCHAR}, #{paymentTerm,jdbcType=VARCHAR}, #{employee,jdbcType=VARCHAR}, 
+      #{staTime,jdbcType=DATE}, #{endTime,jdbcType=DATE}, #{state,jdbcType=VARCHAR}, 
+      #{contractType,jdbcType=VARCHAR}, #{isformate,jdbcType=VARCHAR}, #{serviceModel,jdbcType=VARCHAR}, 
+      #{resOne,jdbcType=VARCHAR}, #{resTwo,jdbcType=VARCHAR}, #{resThree,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{proNo,jdbcType=VARCHAR}, #{saleWay,jdbcType=VARCHAR}, 
+      #{saleFunc,jdbcType=VARCHAR}, #{period,jdbcType=INTEGER}, #{tradeTerm,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.aiko.pact.dto.AikoContract" >
+    insert into aiko_contract
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="contractId != null" >
+        CONTRACT_ID,
+      </if>
+      <if test="contractNo != null" >
+        CONTRACT_NO,
+      </if>
+      <if test="purchaseNo != null" >
+        PURCHASE_NO,
+      </if>
+      <if test="saleGroup != null" >
+        SALE_GROUP,
+      </if>
+      <if test="saleOrg != null" >
+        SALE_ORG,
+      </if>
+      <if test="customerNo != null" >
+        CUSTOMER_NO,
+      </if>
+      <if test="customerName != null" >
+        CUSTOMER_NAME,
+      </if>
+      <if test="sum != null" >
+        SUM,
+      </if>
+      <if test="currency != null" >
+        CURRENCY,
+      </if>
+      <if test="paymentWay != null" >
+        PAYMENT_WAY,
+      </if>
+      <if test="paymentTerm != null" >
+        PAYMENT_TERM,
+      </if>
+      <if test="employee != null" >
+        EMPLOYEE,
+      </if>
+      <if test="staTime != null" >
+        STA_TIME,
+      </if>
+      <if test="endTime != null" >
+        END_TIME,
+      </if>
+      <if test="state != null" >
+        STATE,
+      </if>
+      <if test="contractType != null" >
+        CONTRACT_TYPE,
+      </if>
+      <if test="isformate != null" >
+        ISFORMATE,
+      </if>
+      <if test="serviceModel != null" >
+        SERVICE_MODEL,
+      </if>
+      <if test="resOne != null" >
+        RES_ONE,
+      </if>
+      <if test="resTwo != null" >
+        RES_TWO,
+      </if>
+      <if test="resThree != null" >
+        RES_THREE,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="proNo != null" >
+        PRO_NO,
+      </if>
+      <if test="saleWay != null" >
+        SALE_WAY,
+      </if>
+      <if test="saleFunc != null" >
+        SALE_FUNC,
+      </if>
+      <if test="period != null" >
+        PERIOD,
+      </if>
+      <if test="tradeTerm != null" >
+        TRADE_TERM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="contractId != null" >
+        #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="contractNo != null" >
+        #{contractNo,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseNo != null" >
+        #{purchaseNo,jdbcType=VARCHAR},
+      </if>
+      <if test="saleGroup != null" >
+        #{saleGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="saleOrg != null" >
+        #{saleOrg,jdbcType=VARCHAR},
+      </if>
+      <if test="customerNo != null" >
+        #{customerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null" >
+        #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="sum != null" >
+        #{sum,jdbcType=DECIMAL},
+      </if>
+      <if test="currency != null" >
+        #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentWay != null" >
+        #{paymentWay,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentTerm != null" >
+        #{paymentTerm,jdbcType=VARCHAR},
+      </if>
+      <if test="employee != null" >
+        #{employee,jdbcType=VARCHAR},
+      </if>
+      <if test="staTime != null" >
+        #{staTime,jdbcType=DATE},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=DATE},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="contractType != null" >
+        #{contractType,jdbcType=VARCHAR},
+      </if>
+      <if test="isformate != null" >
+        #{isformate,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceModel != null" >
+        #{serviceModel,jdbcType=VARCHAR},
+      </if>
+      <if test="resOne != null" >
+        #{resOne,jdbcType=VARCHAR},
+      </if>
+      <if test="resTwo != null" >
+        #{resTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="resThree != null" >
+        #{resThree,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="proNo != null" >
+        #{proNo,jdbcType=VARCHAR},
+      </if>
+      <if test="saleWay != null" >
+        #{saleWay,jdbcType=VARCHAR},
+      </if>
+      <if test="saleFunc != null" >
+        #{saleFunc,jdbcType=VARCHAR},
+      </if>
+      <if test="period != null" >
+        #{period,jdbcType=INTEGER},
+      </if>
+      <if test="tradeTerm != null" >
+        #{tradeTerm,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.aiko.pact.dto.AikoContractExample" resultType="java.lang.Integer" >
+    select count(*) from aiko_contract
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update aiko_contract
+    <set >
+      <if test="record.contractId != null" >
+        CONTRACT_ID = #{record.contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contractNo != null" >
+        CONTRACT_NO = #{record.contractNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.purchaseNo != null" >
+        PURCHASE_NO = #{record.purchaseNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.saleGroup != null" >
+        SALE_GROUP = #{record.saleGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="record.saleOrg != null" >
+        SALE_ORG = #{record.saleOrg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.customerNo != null" >
+        CUSTOMER_NO = #{record.customerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.customerName != null" >
+        CUSTOMER_NAME = #{record.customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sum != null" >
+        SUM = #{record.sum,jdbcType=DECIMAL},
+      </if>
+      <if test="record.currency != null" >
+        CURRENCY = #{record.currency,jdbcType=VARCHAR},
+      </if>
+      <if test="record.paymentWay != null" >
+        PAYMENT_WAY = #{record.paymentWay,jdbcType=VARCHAR},
+      </if>
+      <if test="record.paymentTerm != null" >
+        PAYMENT_TERM = #{record.paymentTerm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.employee != null" >
+        EMPLOYEE = #{record.employee,jdbcType=VARCHAR},
+      </if>
+      <if test="record.staTime != null" >
+        STA_TIME = #{record.staTime,jdbcType=DATE},
+      </if>
+      <if test="record.endTime != null" >
+        END_TIME = #{record.endTime,jdbcType=DATE},
+      </if>
+      <if test="record.state != null" >
+        STATE = #{record.state,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contractType != null" >
+        CONTRACT_TYPE = #{record.contractType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isformate != null" >
+        ISFORMATE = #{record.isformate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.serviceModel != null" >
+        SERVICE_MODEL = #{record.serviceModel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.resOne != null" >
+        RES_ONE = #{record.resOne,jdbcType=VARCHAR},
+      </if>
+      <if test="record.resTwo != null" >
+        RES_TWO = #{record.resTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.resThree != null" >
+        RES_THREE = #{record.resThree,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.proNo != null" >
+        PRO_NO = #{record.proNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.saleWay != null" >
+        SALE_WAY = #{record.saleWay,jdbcType=VARCHAR},
+      </if>
+      <if test="record.saleFunc != null" >
+        SALE_FUNC = #{record.saleFunc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.period != null" >
+        PERIOD = #{record.period,jdbcType=INTEGER},
+      </if>
+      <if test="record.tradeTerm != null" >
+        TRADE_TERM = #{record.tradeTerm,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update aiko_contract
+    set CONTRACT_ID = #{record.contractId,jdbcType=VARCHAR},
+      CONTRACT_NO = #{record.contractNo,jdbcType=VARCHAR},
+      PURCHASE_NO = #{record.purchaseNo,jdbcType=VARCHAR},
+      SALE_GROUP = #{record.saleGroup,jdbcType=VARCHAR},
+      SALE_ORG = #{record.saleOrg,jdbcType=VARCHAR},
+      CUSTOMER_NO = #{record.customerNo,jdbcType=VARCHAR},
+      CUSTOMER_NAME = #{record.customerName,jdbcType=VARCHAR},
+      SUM = #{record.sum,jdbcType=DECIMAL},
+      CURRENCY = #{record.currency,jdbcType=VARCHAR},
+      PAYMENT_WAY = #{record.paymentWay,jdbcType=VARCHAR},
+      PAYMENT_TERM = #{record.paymentTerm,jdbcType=VARCHAR},
+      EMPLOYEE = #{record.employee,jdbcType=VARCHAR},
+      STA_TIME = #{record.staTime,jdbcType=DATE},
+      END_TIME = #{record.endTime,jdbcType=DATE},
+      STATE = #{record.state,jdbcType=VARCHAR},
+      CONTRACT_TYPE = #{record.contractType,jdbcType=VARCHAR},
+      ISFORMATE = #{record.isformate,jdbcType=VARCHAR},
+      SERVICE_MODEL = #{record.serviceModel,jdbcType=VARCHAR},
+      RES_ONE = #{record.resOne,jdbcType=VARCHAR},
+      RES_TWO = #{record.resTwo,jdbcType=VARCHAR},
+      RES_THREE = #{record.resThree,jdbcType=VARCHAR},
+      CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      PRO_NO = #{record.proNo,jdbcType=VARCHAR},
+      SALE_WAY = #{record.saleWay,jdbcType=VARCHAR},
+      SALE_FUNC = #{record.saleFunc,jdbcType=VARCHAR},
+      PERIOD = #{record.period,jdbcType=INTEGER},
+      TRADE_TERM = #{record.tradeTerm,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.aiko.pact.dto.AikoContract" >
+    update aiko_contract
+    <set >
+      <if test="contractNo != null" >
+        CONTRACT_NO = #{contractNo,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseNo != null" >
+        PURCHASE_NO = #{purchaseNo,jdbcType=VARCHAR},
+      </if>
+      <if test="saleGroup != null" >
+        SALE_GROUP = #{saleGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="saleOrg != null" >
+        SALE_ORG = #{saleOrg,jdbcType=VARCHAR},
+      </if>
+      <if test="customerNo != null" >
+        CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null" >
+        CUSTOMER_NAME = #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="sum != null" >
+        SUM = #{sum,jdbcType=DECIMAL},
+      </if>
+      <if test="currency != null" >
+        CURRENCY = #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentWay != null" >
+        PAYMENT_WAY = #{paymentWay,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentTerm != null" >
+        PAYMENT_TERM = #{paymentTerm,jdbcType=VARCHAR},
+      </if>
+      <if test="employee != null" >
+        EMPLOYEE = #{employee,jdbcType=VARCHAR},
+      </if>
+      <if test="staTime != null" >
+        STA_TIME = #{staTime,jdbcType=DATE},
+      </if>
+      <if test="endTime != null" >
+        END_TIME = #{endTime,jdbcType=DATE},
+      </if>
+      <if test="state != null" >
+        STATE = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="contractType != null" >
+        CONTRACT_TYPE = #{contractType,jdbcType=VARCHAR},
+      </if>
+      <if test="isformate != null" >
+        ISFORMATE = #{isformate,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceModel != null" >
+        SERVICE_MODEL = #{serviceModel,jdbcType=VARCHAR},
+      </if>
+      <if test="resOne != null" >
+        RES_ONE = #{resOne,jdbcType=VARCHAR},
+      </if>
+      <if test="resTwo != null" >
+        RES_TWO = #{resTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="resThree != null" >
+        RES_THREE = #{resThree,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="proNo != null" >
+        PRO_NO = #{proNo,jdbcType=VARCHAR},
+      </if>
+      <if test="saleWay != null" >
+        SALE_WAY = #{saleWay,jdbcType=VARCHAR},
+      </if>
+      <if test="saleFunc != null" >
+        SALE_FUNC = #{saleFunc,jdbcType=VARCHAR},
+      </if>
+      <if test="period != null" >
+        PERIOD = #{period,jdbcType=INTEGER},
+      </if>
+      <if test="tradeTerm != null" >
+        TRADE_TERM = #{tradeTerm,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where CONTRACT_ID = #{contractId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.aiko.pact.dto.AikoContract" >
+    update aiko_contract
+    set CONTRACT_NO = #{contractNo,jdbcType=VARCHAR},
+      PURCHASE_NO = #{purchaseNo,jdbcType=VARCHAR},
+      SALE_GROUP = #{saleGroup,jdbcType=VARCHAR},
+      SALE_ORG = #{saleOrg,jdbcType=VARCHAR},
+      CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR},
+      CUSTOMER_NAME = #{customerName,jdbcType=VARCHAR},
+      SUM = #{sum,jdbcType=DECIMAL},
+      CURRENCY = #{currency,jdbcType=VARCHAR},
+      PAYMENT_WAY = #{paymentWay,jdbcType=VARCHAR},
+      PAYMENT_TERM = #{paymentTerm,jdbcType=VARCHAR},
+      EMPLOYEE = #{employee,jdbcType=VARCHAR},
+      STA_TIME = #{staTime,jdbcType=DATE},
+      END_TIME = #{endTime,jdbcType=DATE},
+      STATE = #{state,jdbcType=VARCHAR},
+      CONTRACT_TYPE = #{contractType,jdbcType=VARCHAR},
+      ISFORMATE = #{isformate,jdbcType=VARCHAR},
+      SERVICE_MODEL = #{serviceModel,jdbcType=VARCHAR},
+      RES_ONE = #{resOne,jdbcType=VARCHAR},
+      RES_TWO = #{resTwo,jdbcType=VARCHAR},
+      RES_THREE = #{resThree,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      PRO_NO = #{proNo,jdbcType=VARCHAR},
+      SALE_WAY = #{saleWay,jdbcType=VARCHAR},
+      SALE_FUNC = #{saleFunc,jdbcType=VARCHAR},
+      PERIOD = #{period,jdbcType=INTEGER},
+      TRADE_TERM = #{tradeTerm,jdbcType=VARCHAR}
+    where CONTRACT_ID = #{contractId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="stylesheet" type="text/css" href="${ctx}/easyui/common/common.css">
+<link rel="stylesheet" type="text/css" href="${ctx}/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="${ctx}/easyui/themes/icon.css">
+<script type="text/javascript" src="${ctx}/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="${ctx}/js/jquery/jquery.form.js"></script>
+<script type="text/javascript" src="${ctx}/easyui/common/common.js"></script>
+<script type="text/javascript" src="${ctx}/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="${ctx}/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="${ctx}/modules/common/common.js"></script>
+<script type="text/javascript">
+/* function onSelectCustomer(obj, value, text){
+	$("#customerCode").val(value);
+	$("#customerName").val(text);
+} */
+$(function(){
+	$("input[name='contract_no']").val(request('contract_no'));
+	$("input[name='plan_num']").val(request('plan_num'));
+	$("input[name='plan_no']").val(request('plan_no'));	
+});
+</script>
+</head>
+<body class="easyui-layout in-background">
+<form class="common-ajax" id="submit-form" name="submit-form" click-btn="reloadPayIn" action="${ctx}/payin/add" method="post" >
+	<input type="hidden" name="contract_no">
+	<input type="hidden" name="plan_no">
+	<input type="hidden" name="plan_num">
+	<table class="in-table width85 marginauto">
+		<tr>
+			<td class="left-td">回款金额：</td>
+			<td>
+				<input type="text" class="easyui-textbox in-input" id="receipt_amount" name="receipt_amount" prompt="" required="required"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="left-td">回款日期：</td>
+			<td>
+				<input type="text" class="easyui-datebox in-input" id="receipt_date" name="receipt_date" prompt="" required="required"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="left-td">回款单据：</td>
+			<td>
+				<input type="text" class="easyui-textbox in-input" id="receipt_bill" name="receipt_bill" prompt="" required="required"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="left-td">回款方式：</td>
+			<td>
+				<select class="easyui-combobox in-input" id="receipt_way" name="receipt_way" panelHeight="auto" required="required">
+					<option value="承总汇票">承总汇票</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="left-td">付款人：</td>
+			<td>
+				<input type="text" class="easyui-textbox in-input" id="payer" name="payer" prompt="" required="required"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="left-td">备注：</td>
+			<td>
+				<input type="text" class="easyui-textbox in-textarea" multiline="true" id="note" name="note"/>
+			</td>
+		</tr>
+	</table>
+	<table class="in-table width85 marginauto">
+		<tr>
+			<td class="text-align-center">
+				<input type="button" class="in-button in-button-normal" value="保存" onclick="submitForm('submit-form');"/> 
+				<input type="reset" class="in-button in-button-nouse" value="重置">
+			</td>
+		</tr>
+	</table>
+	</form>
+</body>
+</html>

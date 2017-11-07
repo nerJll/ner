@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>浙江爱旭光伏-合同管理</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="stylesheet" type="text/css"
+	href="${ctx}/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css"
+	href="${ctx}/easyui/themes/icon.css">
+<script type="text/javascript" src="${ctx}/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="${ctx}/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript"
+	src="${ctx}/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="${ctx}/js/common/contract.js"></script>
+<script>
+//修改合同按钮
+function modipact() {
+		//var ss = [];
+		var rows = $('#pact1').datagrid('getSelections');
+		if (rows.length == 0) {
+			//alert('请选择要修改的合同')
+			$.messager.alert('提示', "请选择要修改的合同");
+		}
+		window.open("${ctx}/pact/modipact/" + rows[0].contractId)
+		//location.href = "${ctx}/pact/modipact/" + rows[0].contractId
+		/* alert(rows[0].contractId)
+		 for (var i = 0; i < rows.length; i++) {
+			var row = rows[i];
+			ss.push('<span>' + row.purchaseNo + ":" + row.saleOrg + ":"
+					+ row.customerNo + '</span>');
+		}
+		$.messager.alert('消息', ss.join('<br/>')); */
+	}
+//查看合同按钮
+function getpact() {
+		//var ss = [];
+		var rows = $('#pact1').datagrid('getSelections');
+		if (rows.length == 0) {
+			//alert('请选择要查看的合同')
+			$.messager.alert('提示', "请选择要查看的合同");
+		}
+		window.open("${ctx}/pact/getpact/" + rows[0].contractId)
+		//location.href = "${ctx}/pact/getpact/" + rows[0].contractId
+	} 
+//获取产品信息
+function getprono(){
+		$("#prono1").empty()
+		//$.messager.alert($('#prono2').textbox('getValue')+$('#prona2').textbox('getValue'))
+		var prono2 = $('#prono2').textbox('getValue')
+		$.ajax({
+			type:"get",
+			url:"http://portal.aikosolar.com/aiko-crm/sapconfig/execute?functionCode=ZSDCRM004",
+			cache:true,
+			beforeSend: function () {
+			    $.messager.progress({ 
+			       title: '提示', 
+			       msg: '数据加载中，请稍候……', 
+			       text: '' 
+			    });
+			},
+			complete: function () {
+			         $.messager.progress('close');
+			    },
+			success:function(data){
+				var index1=0;
+				for(var i=0;i<data.data.result.length;i++){
+					var code1 = data.data.result[i].code
+					var name1 = data.data.result[i].name
+					var prono = code1 + " " + name1
+					if(prono.indexOf(prono2)>-1){
+							index1++;
+							$("#prono1").append(`<tr><td>${i+1}</td><td><a
+							href='#' onclick="javascript:chosepro('${code1}','${name1}')">${code1}</a></td><td><a
+							href='#' onclick="javascript:chosepro('${code1}','${name1}')">${name1}</a></td></tr>`)		
+					}
+				}
+				if(index1==0){
+					$.messager.alert("提示","无数据")
+				}
+			}
+		}) 
+}
+//产品信息赋值
+function chosepro(prono,prona){
+	$("#prono").searchbox('setValue',prono)
+	$.messager.alert("产品编码信息","添加成功！<br>产品编码："+prono+'<br>产品名称：'+prona)
+}
+//获取客户信息
+/* function getcus(){
+		$("#cust2").empty()
+		//$.messager.alert($('#prono2').textbox('getValue')+$('#prona2').textbox('getValue'))
+		var prono2 = $('#cus2').textbox('getValue')
+		$.ajax({
+			type:"get",
+			url:"http://portal.aikosolar.com/aiko-crm/sapconfig/execute?functionCode=ZSDCRM005",
+			cache:true,
+			success:function(data){
+				var index1=0;
+				for(var i=0;i<data.data.result.length;i++){
+					var code1 = data.data.result[i].code
+					var name1 = data.data.result[i].name
+					var prono = code1 + " " + name1
+					if(prono.indexOf(prono2)>-1){
+							index1++;
+							$("#cust2").append(`<tr><td>${i+1}</td><td><a
+							href='#' onclick="javascript:chosecus('${code1}','${name1}')">${code1}</a></td><td><a
+							href='#' onclick="javascript:chosecus('${code1}','${name1}')">${name1}</a></td></tr>`)		
+					}
+				}
+				if(index1==0){
+					$.messager.alert("提示","无数据")
+				}
+			}
+		}) 
+}
+//客户信息赋值
+function chosecus(prono,prona){
+	$("#custom").searchbox('setValue',prona)
+	$.messager.alert("客户信息","添加成功！<br>客户编码："+prono+'<br>客户名称：'+prona)
+} */
+</script>
+</head>
+<body class="easyui-layout">
+	<div class="easyui-layout"
+		style="width: window.screen.width; height: 650px;">
+		<div data-options="region:'north'"
+			style="height: 60px; background-color: #F0F8FF;">
+			<img alt="爱旭logo" src="${ctx}/images/aixulogo.png" style="width:80px;height:25px">
+			<font size=3><b>合同管理</b></font><br> <span style="float: right"><a
+				href="${ctx}/pact/toaddpact" class="easyui-linkbutton"
+				data-options="iconCls:'icon-add'" target="_blank" >新增合同</a> <a
+				href="javascript:modipact()" class="easyui-linkbutton"
+				data-options="iconCls:'icon-remove'" >修改合同</a> <a
+				href="javascript:getpact()" class="easyui-linkbutton" >查看合同</a> </span>
+		</div>
+		<div data-options="region:'west',split:true" title="查询条件"
+			style="width: 180px;">
+			<br> <a href="javascript:void(0)" class="easyui-linkbutton"
+				data-options="iconCls:'icon-search'" style="width: 80px"
+				onclick="submitForm()">查询</a> <a href="javascript:void(0)"
+				class="easyui-linkbutton" data-options="iconCls:'icon-reload'"
+				style="width: 80px" onclick="clearForm()">清除条件</a>
+			<form id="ff">
+				<br>
+				<table>
+					<tr>
+						<td>销售组织：</td>
+						<td><select style="width: 100px" class="easyui-combobox"
+						data-options="panelWidth:150"
+							id="saleorg">
+								<option value=""> </option>
+								<option value="1100 爱康外贸销售">1100 爱康外贸销售</option>
+								<option value="1200 爱康内贸销售">1200 爱康内贸销售</option>
+								<option value="1300 爱康OEM销售">1300 爱康OEM销售</option>
+								<option value="1400 爱康其它销售">1400 爱康其它销售</option>
+								<option value="2100 爱旭外贸销售">2100 爱旭外贸销售</option>
+								<option value="2200 爱旭内贸销售">2200 爱旭内贸销售</option>
+								<option value="2300 爱旭OEM销售">2300 爱旭OEM销售</option>
+								<option value="2400 爱旭其他销售">2400 爱旭其他销售</option>
+								<option value="B002 Banca 定义物料账销售组织">B002 Banca 定义物料账销售组织</option>
+								<option value="S04A B004销售组织A">S04A B004销售组织A</option>
+								<option value="S04B B004销售组织B">S04B B004销售组织B</option>
+						</select></td>
+					</tr>
+					<tr style="height: 15px"></tr>
+					<tr>
+						<td>合同编码：</td>
+						<td><input style="width: 100px" class="easyui-textbox"
+							id="pactno" type="text"
+							data-options="prompt:'输入合同编码',required:false" /></td>
+					</tr>
+					<tr style="height: 15px"></tr>
+					<tr>
+						<td>客户采购编码：</td>
+						<td><input style="width: 100px" class="easyui-textbox"
+							id="purno" type="text"
+							data-options="prompt:'输入客户采购编码',required:false" /></td>
+					</tr>
+					<tr style="height: 15px"></tr>
+					<!-- <tr><td>产品编码：</td>
+						<td><input class="easyui-combobox" name="language" style="width:100px;" data-options="
+							url: 'http://portal.aikosolar.com/aiko-crm/sapconfig/execute?functionCode=ZSDCRM004',
+							method: 'get',
+							valueField: 'id',
+							textField: 'text',
+							panelWidth: 250,
+							panelHeight: 'auto',
+							formatter: formatItem">
+							<script type="text/javascript">
+								function formatItem(row){
+									var s = '<span style="font-weight:bold">' + row.status + '</span><br/>' +
+										'<span style="color:#888">' + row.status + '</span>';
+									return s;
+								}
+							</script>
+							</td>
+					</tr> -->
+			
+					<tr>
+						<td>产品编码：</td>
+						<td><input class="easyui-searchbox" id="prono"
+							data-options="prompt:'输入产品编码',searcher:searchpro"
+							style="width: 100px" /></td>
+					</tr>
+					<script>
+						function searchpro(){
+							//openwindow("${ctx}/pact/showProNo","客户信息",600,400)
+							$('#w').window('open')
+						}
+					</script>
+					<tr style="height: 15px"></tr>
+					<tr>
+						<td>客户：</td>
+						<td>
+						<select style="width: 100px" id="custom"
+						data-options="valueField:'id', textField:'text',panelWidth:300"
+							 class="easyui-combobox" >
+						</select></td>
+					</tr>
+					<tr style="height: 15px"></tr>
+					<tr>
+						<td>合同状态：</td>
+						<td><select style="width: 100px" class="easyui-combobox"
+						data-options="panelHeight:'auto'"
+							id="state">
+								<option value=""> </option>
+								<option value="审批中">审批中</option>
+								<option value="已审批">已审批</option>
+								<option value="已下达">已下达</option>
+								<option value="已撤销">已撤销</option>
+						</select></td>
+					</tr>
+					<!-- <tr>
+						<td>客户：</td>
+						<td><input class="easyui-searchbox" id="custom"
+							data-options="prompt:'输入客户信息',searcher:searchcus"
+							style="width: 100px"></td>
+					</tr>
+					<script>
+						function searchcus(){
+							//openwindow("${ctx}/pact/showProNo","客户信息",600,400)
+							$('#w1').window('open')
+						}
+					</script> -->
+					<tr style="height: 15px"></tr>
+					<tr>
+						<td></td>
+						<td><input class="easyui-datebox" id="statime"
+							value="" style="width: 100px"></td>
+					</tr>
+					<tr>
+						<td>创建时间：</td>
+						<td><center>至</center></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><input class="easyui-datebox" id="endtime"
+							value="" style="width: 100px"></td>
+					</tr>
+					<tr>
+					</tr>
+				</table>
+			</form>
+		</div>
+		<div data-options="region:'center',title:'合同信息',iconCls:'icon-ok'">
+			<div data-options="region:'north'" style="height: 308px">
+				<table class="easyui-datagrid" id="pact1"
+					data-options="method:'get',
+					border:false,collapsible:true,singleSelect:true,fit:true,
+					fitColumns:true,pagination:true,rownumbers:true">
+				</table>
+			</div>
+			<div style="background-color: #D1EEEE; height: 25px"
+				class="easyui-panel">
+				<font size=2><b>交货计划</b></font>
+			</div>
+			<div data-options="region:'south'" style="height: 228px">
+				<table class="easyui-datagrid" id="plan1"
+					data-options="method:'get',
+					border:false,collapsible:true,singleSelect:true,fit:true,
+					fitColumns:true,pagination:true,rownumbers:true">
+				</table>
+			</div>
+		</div>
+	</div>
+	<div id="w" class="easyui-window" title="产品编码" data-options="modal:true,closed:true,iconCls:'icon-save'" style="width:550px;height:300px;">
+		产品信息：<input style="width: 200px" class="easyui-textbox"
+							id="prono2" type="text"
+							data-options="prompt:'输入产品信息（编码或名称）',required:false" />
+		<a href="javascript:void(0)" class="easyui-linkbutton"
+				data-options="iconCls:'icon-search'" style="width: 80px"
+				onclick="getprono()">获取数据</a>
+		<table id="prono1"></table>
+	</div>
+	<div id="w1" class="easyui-window" title="客户信息" data-options="modal:true,closed:true,iconCls:'icon-save'" style="width:550px;height:300px;">
+		客户信息：<input style="width: 200px" class="easyui-textbox"
+							id="cus2" type="text"
+							data-options="prompt:'输入客户信息（编码或名称）',required:false" />
+		<a href="javascript:void(0)" class="easyui-linkbutton"
+				data-options="iconCls:'icon-search'" style="width: 80px"
+				onclick="getcus()">获取数据</a>
+		<table id="cust2"></table>
+	</div>
+</body>
+</html>

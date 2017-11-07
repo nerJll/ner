@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css"
+	href="${ctx}/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css"
+	href="${ctx}/easyui/themes/icon.css">
+<script type="text/javascript" src="${ctx}/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="${ctx}/js/jquery/jquery.form.js"></script>
+<script type="text/javascript" src="${ctx}/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="${ctx}/js/common/ajaxfileupload.js"></script>
+<script type="text/javascript"
+	src="${ctx}/js/common/jquery.tablesort.js"></script>
+<script type="text/javascript"
+	src="${ctx}/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script>
+function down(){
+	$.ajax({
+        url:"${ctx}/test/testHttpMessageDown",
+        type:"post",
+        data:{"fileName":"add-view.html"},
+        processData:false,
+        contentType:false,
+        success:function(data){
+            alert("下载成功")
+        },
+        error:function(e){
+            alert("下载失败")
+        }
+    }) 
+}
+function fileupload(){
+    var form = new FormData(document.getElementById("tf"))
+//     var req = new XMLHttpRequest();
+//     req.open("post", "${pageContext.request.contextPath}/public/testupload", false);
+//     req.send(form);
+    $.ajax({
+        url:"${ctx}/test/testupload",
+        type:"post",
+        data:form,
+        processData:false,
+        contentType:false,
+        success:function(data){
+            alert(data)
+        },
+        error:function(e){
+            alert("上传失败")
+        }
+    })        
+}
+function load(fileName){
+	$("#fileName").val(fileName)
+	$("#l1").form('submit')
+}
+</script>
+</head>
+<body>
+	<form id="tf">
+		<input class="easyui-filebox" name="file"
+			data-options="prompt:'Choose another file...'"> <input
+			type="button" value="上传" onclick="fileupload()">
+	</form>
+	<form id="l1" action="${ctx}/test/testHttpMessageDown" method='post'>
+		<input id="fileName" name="fileName" type="hidden"/>
+		<a href="#" onclick="load('add-view.html')">add-view.html</a><br>
+		<a href="#" onclick="load('crm功能设计.html')">crm功能设计.html</a>
+	</form>
+</body>
+</html>

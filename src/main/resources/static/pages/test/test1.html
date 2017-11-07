@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Basic Layout - jQuery EasyUI Demo</title>
+<link rel="stylesheet" type="text/css"
+	href="${ctx}/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css"
+	href="${ctx}/easyui/themes/icon.css">
+<script type="text/javascript" src="${ctx}/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="${ctx}/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript"
+	src="${ctx}/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script>
+	function doSearch(value) {
+		alert('You input: ' + value);
+	}
+	function submitForm() {
+		alert($("#salegroup").val())
+		alert($("#pactno").val())
+		alert($("#purno").val())
+		alert($("#prono").val())
+		alert($("#custom").val())
+		alert($("#statime").val())
+		alert($("#endtime").val())
+		$('#ff').form('submit');
+	}
+	function clearForm() {
+		$('#ff').form('clear');
+	}
+</script>
+</head>
+<body>
+	<div class="easyui-layout"
+		style="width: window.screen.width; height: 650px;">
+		<div data-options="region:'north'"
+			style="height: 60px; background-color: #F0F8FF;">
+			<font size=3><b>合同管理</b></font><br> <span style="float: right"><a
+				href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'">新增合同</a>
+				<a href="#" class="easyui-linkbutton"
+				data-options="iconCls:'icon-remove'">修改合同</a> <a href="#"
+				class="easyui-linkbutton">查看合同</a> </span>
+		</div>
+		<div data-options="region:'west',split:true" title="查询条件"
+			style="width: 180px;">
+			<br> <a href="javascript:void(0)" class="easyui-linkbutton"
+				data-options="iconCls:'icon-search'" style="width: 80px"
+				onclick="submitForm()">查询</a> <a href="javascript:void(0)"
+				class="easyui-linkbutton" data-options="iconCls:'icon-reload'"
+				style="width: 80px" onclick="clearForm()">清除条件</a>
+			<form id="ff" action="#" method="post">
+				<br>
+				<table>
+					<tr>
+						<td>销售组：</td>
+						<td><select style="width: 100px" class="easyui-combobox"
+							id="salegroup" name="language">
+								<option>201 内贸组</option>
+								<option>301 OEM组</option>
+						</select></td>
+					</tr>
+					<tr style="height:15px"></tr>
+					<tr>
+						<td>合同编码：</td>
+						<td><input class="easyui-searchbox" id="pactno"
+							data-options="prompt:'Please Input Value',searcher:doSearch"
+							style="width: 100px"></td>
+					</tr>
+					<tr style="height:15px"></tr>
+					<tr>
+						<td>采购编码：</td>
+						<td><input class="easyui-searchbox" id="purno"
+							data-options="prompt:'Please Input Value',searcher:doSearch"
+							style="width: 100px"></td>
+					</tr>
+					<tr style="height:15px"></tr>
+					<tr>
+						<td>产品编码：</td>
+						<td><input style="width: 100px" class="easyui-textbox" id="prono"
+							type="text" name="name" data-options="required:false" /></td>
+					</tr>
+					<tr style="height:15px"></tr>
+					<tr>
+						<td>客户：</td>
+						<td><input style="width: 100px" class="easyui-textbox" id="custom"
+							type="text" name="name" data-options="required:false" /></td>
+					</tr>
+					<tr style="height:15px"></tr>
+					<tr>
+						<td>创建时间：</td>
+					</tr>
+					<tr style="height:15px"></tr>
+					<tr>
+						<td colspan="2"><input class="easyui-datetimebox" id="statime"
+							value="10/11/2012 2:3:56" style="width: 150px"></td>
+					</tr>	
+					<tr>
+						<td colspan="2"><center>到</center></td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input class="easyui-datetimebox" id="endtime"
+							value="10/11/2012 2:3:56" style="width: 150px"></td>
+					</tr>	
+				</table>
+			</form>
+		</div>
+		<div data-options="region:'center',title:'合同信息',iconCls:'icon-ok'">
+			<div data-options="region:'north'" style="height: 260px">
+				<table class="easyui-datagrid"
+					data-options="url:'',method:'get',border:false,singleSelect:true,fit:true,fitColumns:true">
+					<thead>
+						<tr>
+							<th data-options="field:'itemid'">Item ID</th>
+							<th data-options="field:'itemid'">Item ID</th>
+							<th data-options="field:'itemid'">Item ID</th>
+							<th data-options="field:'itemid'">Item ID</th>
+							<th data-options="field:'itemid'">Item ID</th>
+							<th data-options="field:'itemid'">Item ID</th>
+							<th data-options="field:'itemid'">Item ID</th>
+							<th data-options="field:'itemid'">Item ID</th>
+							<th data-options="field:'itemid'">Item ID</th>
+							<th data-options="field:'itemid'">Item ID</th>
+							<th data-options="field:'itemid'">Item ID</th>
+							<th data-options="field:'itemid'">Item ID</th>
+							<th data-options="field:'itemid'">Item ID</th>
+							<th data-options="field:'itemid'">Item ID</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+			<div class="easyui-panel">
+				<div class="easyui-pagination" data-options="total:114"></div>
+			</div>
+			<div style="background-color: #D1EEEE; height: 25px"
+				class="easyui-panel">
+				<font size=2><b>交货计划</b></font>
+			</div>
+			<div data-options="region:'south'" style="height: 213px">
+				<table class="easyui-datagrid"
+					data-options="url:'',method:'get',border:false,singleSelect:true,fit:true,fitColumns:true">
+					<thead>
+						<tr>
+							<th data-options="field:'itemid'">Item ID</th>
+							<th data-options="field:'itemid'">Item ID</th>
+							<th data-options="field:'itemid'">Item ID</th>
+							<th data-options="field:'itemid'">Item ID</th>
+							<th data-options="field:'itemid'">Item ID</th>
+							<th data-options="field:'itemid'">Item ID</th>
+							<th data-options="field:'itemid'">Item ID</th>
+							<th data-options="field:'itemid'">Item ID</th>
+							<th data-options="field:'itemid'">Item ID</th>
+							<th data-options="field:'itemid'">Item ID</th>
+							<th data-options="field:'itemid'">Item ID</th>
+							<th data-options="field:'itemid'">Item ID</th>
+							<th data-options="field:'itemid'">Item ID</th>
+							<th data-options="field:'itemid'">Item ID</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+			<div class="easyui-panel">
+				<div class="easyui-pagination" data-options="total:114"></div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

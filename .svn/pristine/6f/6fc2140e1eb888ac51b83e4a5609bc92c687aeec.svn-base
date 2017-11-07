@@ -1,0 +1,31 @@
+package com.aiko.test;
+
+//import java.util.ArrayList;
+//import java.util.List;
+//
+//import org.junit.Test;
+//import org.junit.runner.RunWith;
+//import org.springframework.boot.test.context.SpringBootTest;
+//import org.springframework.test.context.junit4.SpringRunner;
+//
+//import com.aiko.common.util.SAPUtils;
+//import com.aiko.deliveryplan.dto.AikoDeliveryPlan;
+//import com.aiko.pact.dto.AikoContract;
+
+/** 
+* @author Jianglinle
+* @date 2017年11月1日 下午3:05:03 
+* @version 1.0.0
+* @aiko-
+*/
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
+public class SAPTest {
+//	@Test
+//	public void test1(){
+//		AikoContract contract = new AikoContract();
+//		List<AikoDeliveryPlan> plans = new ArrayList<>();
+//		SAPUtils.tiJiaoSAP(contract,plans);
+//	}
+}
+ 

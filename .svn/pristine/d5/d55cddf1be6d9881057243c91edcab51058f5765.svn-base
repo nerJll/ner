@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>新增合同</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="stylesheet" type="text/css"
+	href="${ctx}/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css"
+	href="${ctx}/easyui/themes/icon.css">
+<script type="text/javascript" src="${ctx}/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="${ctx}/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript"
+	src="${ctx}/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="${ctx}/js/common/contract.js"></script>
+<script>
+//添加合同标的
+	function appendtr() {
+		$("#dg")
+				.append(
+						"<tr>"
+								+ "<td><input name='index' style='width: 20px; height: 20px' type='checkbox' /></td>"
+								+ "<td><input type='text' name='materielNo' style='width: 30px;' readonly='readonly' /></td>"
+								+ "<td><select style='width: 100%; height: 25px' name='silicon'> <option value='单晶'>单晶</option> <option value='多晶'>多晶</option> <option value='PERC'>PERC</option></select></td>"
+								+ "<td><select style='width: 100%; height: 25px' name='mainGrid'> <option value='四主栅'>四主栅</option> <option value='五主栅'>五主栅</option> </select></td>"
+								+ "<td><select style='width: 100%; height: 25px' name='tech'> <option value='1'>1</option> <option value='2'>2</option> </select></td>"
+								+ "<td><input type='number' step='0.01'  name='convertRate' style='width: 100px;' required="+"'required'/></td>"
+								+ "<td><select style='width: 100%; height: 25px' name='grade'> <option value='A级'>A级</option> <option value='B级'>B级</option><option value='C级'>C级</option></select></td>"
+								+ "<td><input type='number' onKeyup='onlyInt(this)' name='mount' style='width: 100px;'  required="+"'required' /></td>"
+								+ "<td><select style='width: 100px; height: 25px'  name='unit'> <option>W</option> <option>PC</option> </select></td>"
+								+ "<td><input type='text' onkeyup='clearNoNum(this)' name='unitCost' style='width: 100px;'  required="+"'required' onblur='calSum(this)'></td>"
+								+ "<td><input type='number' name='sum' style='width: 100px;'  required="+"'required' readonly></td>"
+								+ "</tr>")
+		var len = $("#dg tr").length
+		for (var i = 2; i < len; i++) {
+			$("#dg tr:eq(" + i + ")").find("input[name='materielNo']").val(($(this).index() + i) * 10)
+		}
+	}
+//移除行
+	function removeit() {
+		$.messager.confirm("删除提示","确定要删除该行吗？",function(r){
+			if(r){
+				$("input[name='index']:checked").each(function() { // 遍历选中的checkbox
+					n = $(this).parents("tr").index(); // 获取checkbox所在行的顺序
+					$("#dg").find("tr:eq(" + n + ")").remove();
+				});
+			}
+		})
+	}
+	//获取行index
+	function getindex(d) {
+		return $(d).index()
+	}
+	//文件上传
+	function fileupload() {
+		var s = $('#file').filebox('getValue');
+		if(s==""||s==null){
+			$.messager.alert("文件提示","请选择要上传的文件")
+		}else{
+			var s1 = s.split("\\")
+			$('#file1').val(s1[s1.length-1])
+			var form = new FormData(document.getElementById("pact"))
+			$.ajax({
+				url : "${ctx}/test/testupload",
+				type : "post",
+				data : form,
+				processData : false,
+				contentType : false,
+				success : function(data) {
+					if(data!="上传失败！"){
+					$.messager.alert('上传文件提示',data+'， 上传成功！');
+					$('#fujian').append(
+							`<tr><td><a href="#" onclick="downloadFileByForm('${data}')">${data}</a><input type='hidden' id='fileName' name='fileName' value="${data}"/>---<input type='button' onclick='removetr()' value='删除'></td></tr>`)
+					}
+				},
+				error : function(e) {
+					$.messager.alert('上传文件提示',"上传失败！");
+				}
+			})
+		} 
+	}
+//移除行
+function removetr(){
+	$.messager.confirm("删除提示","确定要删除该文件吗？",function(r){
+		if(r){
+			n = $(this).parents("tr").index(); // 获取checkbox所在行的顺序
+			$("#fujian").find("tr:eq(" + n + ")").remove();
+		}
+	})
+}	
+//下载文件
+function downloadFileByForm(fileName) {
+	 var url = "${ctx}/test/testHttpMessageDown";
+	 var form = $("<form></form>").attr("action", url).attr("method", "post");
+	 form.append($("<input></input>").attr("type", "hidden").attr("name", "fileName").attr("value", fileName));
+	 form.appendTo('body').submit().remove();
+ }
+var path="";
+//启动
+$(function(){
+	var radio = $('input:radio[name="serviceModel"]')
+	radio.change( function () {
+		var v = $(this).val()
+		if (v === '普通销售') {
+			$('#buycont').attr('readonly', 'readonly').val('')
+		} else {
+			$('#buycont').removeAttr('readonly').val('')
+		}
+	})
+	$('#contractType').combobox({
+		onChange: function () {
+			if ($(this).val() == '框架协议') {
+				$('#pact-detail').css('display','none')
+				$('#dg').css('display','none')
+			} else {
+				$('#pact-detail').css('display','')
+				$('#dg').css('display','')
+			}
+		}
+	})
+	if(!!window.ActiveXObject || "ActiveXObject" in window ||(navigator.userAgent.indexOf("Edge") > -1)){
+		$.messager.alert("提示消息","当前浏览器对数据处理兼容性不是太好，建议换其他浏览器访问以保证数据的准确性。")
+	}
+	$.ajax({
+		type:"get",
+		url:"${ctx}/pact/getSavePath",
+		cache:true,
+		success:function(data){
+			path = data
+		} 
+	})
+	//赋值付款条件
+	$.ajax({
+		 type:'get',
+		 url:'http://portal.aikosolar.com/aiko-crm/sapconfig/execute?functionCode=ZSDCRM010',
+		 cache:true,
+		 dataType : "json", 
+		 success:function(data){
+		 	var data1 = [{"text": "","id":""}]
+		 	for(var i=0; i<data.data.result.length; i++){
+		 		var code = data.data.result[i].code
+		 		var name = data.data.result[i].name
+		 		var saleorg1 = code + " " + name
+		 		data1.push({"text": saleorg1,"id":saleorg1})
+		 	} 
+		 	$("#payterm").combobox("loadData", data1)
+		 }
+	}) 
+	//赋值货币类型
+	$.ajax({
+		 type:'get',
+		 url:'http://portal.aikosolar.com/aiko-crm/sapconfig/execute?functionCode=ZSDCRM007',
+		 cache:true,
+		 dataType : "json", 
+		 success:function(data){
+		 	var data1 = [{"text": "","id":""}]
+		 	for(var i=0; i<data.data.result.length; i++){
+		 		var code = data.data.result[i].code
+		 		var name = data.data.result[i].name
+		 		var saleorg1 = code + " " + name
+		 		data1.push({"text": saleorg1,"id":saleorg1})
+		 	}
+		 	$("#currencytype").combobox("loadData", data1)
+		 	$("#currencytype").combobox("setValue", "CNY 中国人民币")
+		 }
+	}) 
+		//赋值客户信息
+		$.ajax({
+			type:"get",
+			url:"http://portal.aikosolar.com/aiko-crm/sapconfig/execute?functionCode=ZSDCRM005",
+			cache:true,
+			dataType : "json",
+			success:function(data){
+				var data1 = [{"text": " ","id":""}]
+			 	for(var i=0; i<data.data.result.length; i++){
+			 		var code = data.data.result[i].code
+			 		var name = data.data.result[i].name
+			 		var saleorg1 = code + " " + name
+			 		data1.push({"text":saleorg1,"id":saleorg1})
+			 	}
+			 	$("#custom1").combobox("loadData", data1)
+			}
+		})  
+		//赋值销售雇员信息
+		$.ajax({
+			type:"get",
+			url:"http://portal.aikosolar.com/aiko-crm/sapconfig/execute?functionCode=ZSDCRM008",
+			cache:true,
+			dataType : "json",
+			success:function(data){
+				var data1 = [{"text": " ","id":""}]
+			 	for(var i=0; i<data.data.result.length; i++){
+			 		var code = data.data.result[i].code
+			 		var name = data.data.result[i].name
+			 		var saleorg1 = code + " " + name
+			 		data1.push({"text":saleorg1,"id":saleorg1})
+			 	}
+			 	$("#employee2").combobox("loadData", data1)
+			}
+		}) 
+})
+//提交之前赋值
+function fuzhi(){
+	if ($("#payterm").combobox("getValue") == "") {
+		$.messager.alert('提示','请选择付款条件');
+		event.preventDefault();
+	} else if($("#currencytype").combobox("getValue") == ""){
+		$.messager.alert('提示','请选择货币类型');
+		event.preventDefault();
+	}else{
+		 var fileNames = document.getElementsByName('fileName')
+		 var x =""
+		 for(var i=0; i<fileNames.length-1;i++){
+			 x += path+fileNames[i].value+","
+		 }
+		 x+= path+fileNames[fileNames.length-1].value
+		 //alert(x)
+		 $('#resOne').val(x)
+	}
+ }
+</script>
+</head>
+<body class="easyui-layout">
+	<div data-options="region:'center',title:'新增合同'">
+		<div style="background-color: #F0F8FF; height: 100%"
+			class="easyui-panel">
+			<form id="pact" action="${ctx}/contract/insertContract"
+				onsubmit="fuzhi()" method="post">
+				<table style="width: 100%; border-collapse: collapse;">
+					<tr style="height: 10px"></tr>
+					<tr>
+						<td>合同类型：</td>
+						<td><select style="width: 180px; height: 25px"
+							required="required" name="contractType"
+							data-options="panelHeight:'auto'"
+							id="contractType">
+								<option>标准数量合同</option>
+								<option>样片合同</option>
+								<option>框架协议</option>
+						</select></td>
+						<td width="100"></td>
+						<td>格式合同：</td>
+						<td><input type="radio" name="isformate" value="是"
+							checked="checked"><span>是</span> <input type="radio"
+							name="isformate" value="否"><span>否</span></td>
+						<td width="100"></td>
+						<td>业务模式：</td>
+						<td><input type="radio" name="serviceModel" value="普通销售"
+							checked="checked"><span>普通销售</span> <input type="radio"
+							name="serviceModel" value="双经销"><span>双经销</span></td>
+						<td width="100"></td>
+						<td>采购合同引擎：</td>
+						<!-- class="easyui-textbox" data-options="prompt:'请输入采购合同引擎'"-->
+						<td><input style="width: 180px" id="buycont" type="text" name="saleFunc" readonly></td>
+					</tr>
+					<tr style="height: 10px"></tr>
+					<tr>
+						<td>销售组织：</td>
+						<td><select style="width: 180px; height: 25px" name="saleOrg"
+						data-options="panelHeight:'auto'"
+							 class="easyui-combobox"  id="saleorg">
+							 	<option value="1100 广东爱旭外贸">1100 广东爱旭外贸</option>
+								<option value="1200 广东爱旭内贸">1200 广东爱旭内贸</option>
+								<option value="1300 广东爱旭OEM">1300 广东爱旭OEM</option>
+								<option value="1400 广东爱旭其它">1400 广东爱旭其它</option>
+								<option value="2100 浙江爱旭外贸">2100 浙江爱旭外贸</option>
+								<option value="2200 浙江爱旭内贸">2200 浙江爱旭内贸</option>
+								<option value="2300 浙江爱旭OEM">2300 浙江爱旭OEM</option>
+								<option value="2400 浙江爱旭其它">2400 浙江爱旭其它</option>
+						</select></td>
+						<td width="100"></td>
+						<td>分销渠道：</td>
+						<td><select style="width: 150px; height: 25px" name="saleWay"
+							class="easyui-combobox" data-options="panelHeight:'auto'" id="saleway">
+								<option value="10 直销">10 直销</option>
+						</select></td>
+						<td width="100"></td>
+						<td>销售组：</td>
+						<td><select style="width: 180px; height: 25px"
+							 name="saleGroup" class="easyui-combobox"
+							 data-options="panelHeight:'auto'"
+							id="salegroup">
+								<option value="101 外贸组">101 外贸组</option>
+								<option value="201 内贸组">201 内贸组</option>
+								<option value="301 OEM组">301 OEM组</option>
+								<option value="401 其他组">401 其他组</option>
+						</select></td>
+						<td width="100"></td>
+						<td>合同编码：</td>
+						<td><input
+							style="width: 180px; height: 18px; background-color: #F0F8FF; border-radius: 5px;"
+							id="contractno" name="contractNo" type="text"
+							readonly="readonly" /></td>
+					</tr>
+					<tr style="height: 10px"></tr>
+					<tr style="background-color: #CAE1FF; height: 30px;">
+						<td colspan="11"><b>合同摘要</b></td>
+					</tr>
+					<tr style="height: 10px"></tr>
+					<tr>
+						<input type="hidden" name="customerNo" value="11"/>
+						<td>客户：</td>
+						<td>
+						<select style="width: 180px" id="custom1" name="customerName"
+						data-options="valueField:'id', textField:'text',panelWidth:300,required:true"
+							 class="easyui-combobox" ></select>
+						</td>
+						<td width="100"></td>
+						<td>客户采购编码：</td>
+						<td><input style="width: 180px" class="easyui-textbox"
+							id="resThree" type="text" name="purchaseNo" required="required"
+							data-options="prompt:'请输入客户采购编码',required:true" /></td>
+						<td width="100"></td>
+						<td>有效期从：</td>
+						<td><input class="easyui-datebox" id="statime" name="staTime"
+							 value="10/11/2012" style="width: 180px" ></td>
+						<td width="100"></td>
+						<td>有效期至：</td>
+						<td><input class="easyui-datebox" id="endtime" name="endTime"
+							 value="10/11/2012"
+							 style="width: 180px"></td>
+					</tr>
+					<tr style="height: 10px"></tr>
+					<tr>
+						<td>付款方式：</td>
+						<td><select required="required"
+							style="width: 180px; height: 25px" name="paymentWay"
+							class="easyui-combobox" panelMaxHeight="200px" 
+							data-options="panelHeight:'auto'"
+							id="payway">
+							<option value=""></option>
+							<option value="1 3个月银行承兑汇票">1 3个月银行承兑汇票</option>
+							<option value="2 120天国内信用证">2 120天国内信用证</option>
+							<option value="3 硅片电池片金额抵冲">3 硅片电池片金额抵冲</option>
+							<option value="A 6个月银行承兑汇票">A 6个月银行承兑汇票</option>
+							<option value="B Bill of exchange (bank)">B Bill of exchange (bank)</option>
+							<option value="C 支票">C 支票</option>
+							<option value="D 6个月信用证">D 6个月信用证</option>
+							<option value="E 现金">E 现金</option>
+							<option value="G 3个月信用证">G 3个月信用证</option>
+							<option value="I 45天信用证">I 45天信用证</option>
+							<option value="T 电汇（Bank transfer）">T 电汇（Bank transfer）</option>
+							<option value="U 电汇（Transfer）">U 电汇（Transfer）</option>
+						</select></td>
+						<td width="100"></td>
+						<td>付款条件：</td>
+						<td><select style="width: 180px; height: 25px"
+							 name="paymentTerm" class="easyui-combobox"
+							data-options="valueField:'id', textField:'text',required:true"
+							id="payterm">
+						</select></td>
+						<td width="100"></td>
+						<td>贸易条款：</td>
+						<td><select style="width: 180px; height: 25px"
+							name="tradeTerm" class="easyui-combobox"
+							class="easyui-combobox"
+							data-options="panelHeight:'auto'"
+							id="tradeterm">
+							<option value=""></option>
+							<option value="CB1 保险">CB1 保险</option>
+							<option value="CY1 运费-鼎天">CY1 运费-鼎天</option>
+							<option value="CY2 运费-DHL">CY2 运费-DHL</option>
+							<option value="CY3 运费-新邦">CY3 运费-新邦</option>
+							<option value="CY4 运费-FEDEX">CY4 运费-FEDEX</option>
+							<option value="CY5 运费-盛达">CY5 运费-盛达</option>
+							<option value="CY6 运费-跨越">CY6 运费-跨越</option>
+							<option value="CY7 运费-顺丰">CY7 运费-顺丰</option>
+						</select></td>
+						<td width="100"></td>
+						<td>货币类型：</td>
+						<td><select style="width: 180px; height: 25px" 
+						data-options="valueField:'id', textField:'text',required:true"
+							name="currency" class="easyui-combobox" id="currencytype">
+						</select></td>
+					</tr>
+					<tr style="height: 10px"></tr>
+					<tr>
+						<td>销售雇员：</td>
+						<!-- <td><input class="easyui-searchbox" name="employee"
+							required="required" id="employee2"
+							data-options="prompt:'请输入销售雇员信息',searcher:searchemp"
+							style="width: 180px"></input></td> -->
+						<td>
+							<select style="width: 180px" id="employee2" name="employee"
+						data-options="valueField:'id', textField:'text',panelWidth:180,required:true"
+							 class="easyui-combobox" ></select>
+						</td>
+						<td width="100"></td>
+					</tr>
+					<tr style="height: 10px"></tr>
+					<div id="pact-detail">
+					<tr style="background-color: #CAE1FF; height: 30px;">
+						<td colspan="11"><b>合同标的</b></td>
+					</tr>
+					</div>
+				</table>
+				<table id="dg" style="text-align: center; width: 100%">
+					<tr>
+						<td colspan="3"><a href="javascript:void(0)"
+							class="easyui-linkbutton"
+							data-options="iconCls:'icon-add',plain:true" onclick="appendtr()">新增</a>
+							<a href="javascript:void(0)" class="easyui-linkbutton"
+							data-options="iconCls:'icon-remove',plain:true"
+							onclick="removeit()">删除</a></td>
+					</tr>
+					<tr style="width: 100%">
+						<th style="text-align: center; width: 3%">选择</th>
+						<th style="text-align: center; width: 3%">项目</th>
+						<th style="text-align: center; width: 10%">硅片晶体</th>
+						<th style="text-align: center; width: 10%">主珊</th>
+						<th style="text-align: center; width: 10%">工艺</th>
+						<th style="text-align: center; width: 10%">转换率（%）</th>
+						<th style="text-align: center; width: 10%">等级</th>
+						<th style="text-align: center; width: 10%">数量</th>
+						<th style="text-align: center; width: 10%">单位</th>
+						<th style="text-align: center; width: 10%">单价</th>
+						<th style="text-align: center; width: 10%">金额</th>
+					</tr>
+				</table>
+
+				<table id="fujian" style="width: 100%;">
+					<tr style="background-color: #CAE1FF; height: 30px;">
+						<td colspan="11"><b>附件上传</b></td>
+					</tr>
+					<tr>
+						<td>
+						<input class="easyui-filebox" name="file" id="file"
+							data-options="prompt:'请选择文件。。。',buttonText: '选择文件'"><input
+							type="button" value="上传"
+							style="width: 60px; height: 35px; background-color: #FFA500; border-radius: 5px"
+							onclick="fileupload()"></td>
+					</tr>
+				</table>
+				<table style="width: 100%;">
+					<tr style="background-color: #CAE1FF; height: 30px;">
+						<td colspan="11"><center>
+								<input style="width: 60px; height: 35px; border-radius: 5px;"
+									type="submit" value="提交"> <input
+									style="width: 60px; height: 35px; border-radius: 5px;"
+									type="reset" value="重置">
+							</center></td>
+				</table>
+				<input type="hidden" name="file1" id="file1"/>
+				<input type="hidden" id="resOne" name="resOne" />
+			</form>
+		</div>
+	</div>
+</body>
+
+</html>

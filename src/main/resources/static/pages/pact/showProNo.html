@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="stylesheet" type="text/css"
+	href="${ctx}/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css"
+	href="${ctx}/easyui/themes/icon.css">
+<script type="text/javascript" src="${ctx}/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="${ctx}/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="${ctx}/easyui/locale/easyui-lang-zh_CN.js"></script>
+<title>产品编码信息</title>
+<script>
+$(function(){
+	$.ajax({
+		type:"get",
+		url:"http://portal.aikosolar.com/aiko-crm/sapconfig/execute?functionCode=ZSDCRM004",
+		cache:true,
+		success:function(data){
+			for(var i=0;i<data.data.result.length;i++){
+				var code1 = data.data.result[i].code
+				var name1 = data.data.result[i].name
+				var prono = code1 + " " + name1
+				$("#proNo").append(`<tr><td>${code1}</td><td>${name1}</td><td><input type='checkbox'></td></tr>`)		
+			}
+		}
+	}) 
+})
+</script>
+</head>
+<body>
+<table id="proNo" >
+</table>
+</body>
+</html>

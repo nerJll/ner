@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="stylesheet" type="text/css" href="${ctx}/easyui/common/common.css">
+<link rel="stylesheet" type="text/css" href="${ctx}/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="${ctx}/easyui/themes/icon.css">
+<script type="text/javascript" src="${ctx}/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="${ctx}/js/jquery/jquery.form.js"></script>
+<script type="text/javascript" src="${ctx}/easyui/common/common.js"></script>
+<script type="text/javascript" src="${ctx}/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="${ctx}/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="${ctx}/modules/common/common.js"></script>
+<script type="text/javascript">
+function onSelectCustomer(obj, value, text){
+	$("#customerCode").val(value);
+	$("#customerName").val(text);
+}
+$(function(){
+	var sapAJAX = getDataFromSap("customer", "/aiko-crm/sapconfig/execute", {functionCode:"ZSDCRM005"}, true, null, false);
+	var creditAJAX = getData("${ctx}/credit/get", {id:request("id")}, null, false, null, false);
+	$.when(sapAJAX, creditAJAX).done(function (data1, data2) {
+		$.loader.loaded();
+		var returnVal = data2[0];
+		if(returnVal.status == "1"){
+			returnVal.data.customer = returnVal.data.customerCode;
+			$("#submit-form").form("load", returnVal.data);
+		}
+	});
+});
+</script>
+</head>
+<body class="easyui-layout in-background">
+<form class="common-ajax" id="submit-form" name="submit-form" action="${ctx}/credit/update" method="post">
+	<table class="in-table width85 marginauto">
+		<tr>
+			<td class="left-td">客　　户：</td>
+			<td>
+				<input type="hidden" id="id" name="id"/>
+				<input type="hidden" id="customerCode" name="customerCode"/>
+				<input type="hidden" id="customerName" name="customerName"/>
+				<select class="easyui-combobox in-input" id="customer" name="customer" prompt="请选择客户" required="required" disabled="disabled" onchange="onSelectCustomer"></select>
+			</td>
+		</tr>
+		<tr>
+			<td class="left-td">授信金额：</td>
+			<td>
+				<input type="text" class="easyui-textbox in-input" id="amount" name="amount" prompt="授信金额" required="required"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="left-td">有效日期：</td>
+			<td>
+				<input type="text" class="easyui-datebox in-input-date" id="startDate" name="startDate" prompt="开始日期" required="required"/>
+				至
+				<input type="text" class="easyui-datebox in-input-date" id="endDate" name="endDate" prompt="结束日期" required="required"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="left-td">是否特别：</td>
+			<td>
+				<select class="easyui-combobox in-input" id="type" name="type" panelHeight="auto" required="required">
+					<option value="0" selected>否</option>
+					<option value="1">是</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="left-td">是否启用：</td>
+			<td>
+				<select class="easyui-combobox in-input" id="status" name="status" panelHeight="auto" required="required">
+					<option value="1" selected>是</option>
+					<option value="0">否</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="left-td">备　　注：</td>
+			<td>
+				<input type="text" class="easyui-textbox in-textarea" multiline="true" id="des" name="des"/>
+			</td>
+		</tr>
+	</table>
+	<table class="in-table width85 marginauto">
+		<tr>
+			<td class="text-align-center">
+				<input type="button" class="in-button in-button-normal" value="提交" onclick="submitForm('submit-form');"/> 
+				<input type="reset" class="in-button in-button-nouse" value="重置">
+			</td>
+		</tr>
+	</table>
+	</form>
+</body>
+</html>

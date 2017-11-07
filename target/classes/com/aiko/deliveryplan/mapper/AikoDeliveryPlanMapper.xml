@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aiko.deliveryplan.dao.AikoDeliveryPlanMapper" >
+  <resultMap id="BaseResultMap" type="com.aiko.deliveryplan.dto.AikoDeliveryPlan" >
+    <id column="DELIVERY_PLAN_ID" property="deliveryPlanId" jdbcType="VARCHAR" />
+    <result column="CONTRACT_ITEM" property="contractItem" jdbcType="VARCHAR" />
+    <result column="PLAN_NO" property="planNo" jdbcType="INTEGER" />
+    <result column="PLAN_DATE" property="planDate" jdbcType="DATE" />
+    <result column="MATERIEL_NO" property="materielNo" jdbcType="VARCHAR" />
+    <result column="MATERIEL_DES" property="materielDes" jdbcType="VARCHAR" />
+    <result column="MOUNT" property="mount" jdbcType="INTEGER" />
+    <result column="UNIT" property="unit" jdbcType="VARCHAR" />
+    <result column="UNIT_PRICE" property="unitPrice" jdbcType="DECIMAL" />
+    <result column="SUM" property="sum" jdbcType="DECIMAL" />
+    <result column="SALES_ORDER_NO" property="salesOrderNo" jdbcType="VARCHAR" />
+    <result column="DELIVERY_ORDER_NO" property="deliveryOrderNo" jdbcType="VARCHAR" />
+    <result column="RES_ONE" property="resOne" jdbcType="VARCHAR" />
+    <result column="RES_TWO" property="resTwo" jdbcType="VARCHAR" />
+    <result column="RES_THREE" property="resThree" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    DELIVERY_PLAN_ID, "CONTRACT_ITEM", PLAN_NO, PLAN_DATE, MATERIEL_NO, MATERIEL_DES, 
+    MOUNT, UNIT, UNIT_PRICE, SUM, SALES_ORDER_NO, DELIVERY_ORDER_NO, RES_ONE, RES_TWO, 
+    RES_THREE
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.aiko.deliveryplan.dto.AikoDeliveryPlanExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from aiko_delivery_plan
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from aiko_delivery_plan
+    where DELIVERY_PLAN_ID = #{deliveryPlanId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from aiko_delivery_plan
+    where DELIVERY_PLAN_ID = #{deliveryPlanId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.aiko.deliveryplan.dto.AikoDeliveryPlanExample" >
+    delete from aiko_delivery_plan
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.aiko.deliveryplan.dto.AikoDeliveryPlan" >
+    insert into aiko_delivery_plan (DELIVERY_PLAN_ID, "CONTRACT_ITEM", PLAN_NO, 
+      PLAN_DATE, MATERIEL_NO, MATERIEL_DES, 
+      MOUNT, UNIT, UNIT_PRICE, 
+      SUM, SALES_ORDER_NO, DELIVERY_ORDER_NO, 
+      RES_ONE, RES_TWO, RES_THREE
+      )
+    values (#{deliveryPlanId,jdbcType=VARCHAR}, #{contractItem,jdbcType=VARCHAR}, #{planNo,jdbcType=INTEGER}, 
+      #{planDate,jdbcType=DATE}, #{materielNo,jdbcType=VARCHAR}, #{materielDes,jdbcType=VARCHAR}, 
+      #{mount,jdbcType=INTEGER}, #{unit,jdbcType=VARCHAR}, #{unitPrice,jdbcType=DECIMAL}, 
+      #{sum,jdbcType=DECIMAL}, #{salesOrderNo,jdbcType=VARCHAR}, #{deliveryOrderNo,jdbcType=VARCHAR}, 
+      #{resOne,jdbcType=VARCHAR}, #{resTwo,jdbcType=VARCHAR}, #{resThree,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.aiko.deliveryplan.dto.AikoDeliveryPlan" >
+    insert into aiko_delivery_plan
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="deliveryPlanId != null" >
+        DELIVERY_PLAN_ID,
+      </if>
+      <if test="contractItem != null" >
+        "CONTRACT_ITEM",
+      </if>
+      <if test="planNo != null" >
+        PLAN_NO,
+      </if>
+      <if test="planDate != null" >
+        PLAN_DATE,
+      </if>
+      <if test="materielNo != null" >
+        MATERIEL_NO,
+      </if>
+      <if test="materielDes != null" >
+        MATERIEL_DES,
+      </if>
+      <if test="mount != null" >
+        MOUNT,
+      </if>
+      <if test="unit != null" >
+        UNIT,
+      </if>
+      <if test="unitPrice != null" >
+        UNIT_PRICE,
+      </if>
+      <if test="sum != null" >
+        SUM,
+      </if>
+      <if test="salesOrderNo != null" >
+        SALES_ORDER_NO,
+      </if>
+      <if test="deliveryOrderNo != null" >
+        DELIVERY_ORDER_NO,
+      </if>
+      <if test="resOne != null" >
+        RES_ONE,
+      </if>
+      <if test="resTwo != null" >
+        RES_TWO,
+      </if>
+      <if test="resThree != null" >
+        RES_THREE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="deliveryPlanId != null" >
+        #{deliveryPlanId,jdbcType=VARCHAR},
+      </if>
+      <if test="contractItem != null" >
+        #{contractItem,jdbcType=VARCHAR},
+      </if>
+      <if test="planNo != null" >
+        #{planNo,jdbcType=INTEGER},
+      </if>
+      <if test="planDate != null" >
+        #{planDate,jdbcType=DATE},
+      </if>
+      <if test="materielNo != null" >
+        #{materielNo,jdbcType=VARCHAR},
+      </if>
+      <if test="materielDes != null" >
+        #{materielDes,jdbcType=VARCHAR},
+      </if>
+      <if test="mount != null" >
+        #{mount,jdbcType=INTEGER},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="unitPrice != null" >
+        #{unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="sum != null" >
+        #{sum,jdbcType=DECIMAL},
+      </if>
+      <if test="salesOrderNo != null" >
+        #{salesOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryOrderNo != null" >
+        #{deliveryOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="resOne != null" >
+        #{resOne,jdbcType=VARCHAR},
+      </if>
+      <if test="resTwo != null" >
+        #{resTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="resThree != null" >
+        #{resThree,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.aiko.deliveryplan.dto.AikoDeliveryPlanExample" resultType="java.lang.Integer" >
+    select count(*) from aiko_delivery_plan
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update aiko_delivery_plan
+    <set >
+      <if test="record.deliveryPlanId != null" >
+        DELIVERY_PLAN_ID = #{record.deliveryPlanId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contractItem != null" >
+        "CONTRACT_ITEM" = #{record.contractItem,jdbcType=VARCHAR},
+      </if>
+      <if test="record.planNo != null" >
+        PLAN_NO = #{record.planNo,jdbcType=INTEGER},
+      </if>
+      <if test="record.planDate != null" >
+        PLAN_DATE = #{record.planDate,jdbcType=DATE},
+      </if>
+      <if test="record.materielNo != null" >
+        MATERIEL_NO = #{record.materielNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.materielDes != null" >
+        MATERIEL_DES = #{record.materielDes,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mount != null" >
+        MOUNT = #{record.mount,jdbcType=INTEGER},
+      </if>
+      <if test="record.unit != null" >
+        UNIT = #{record.unit,jdbcType=VARCHAR},
+      </if>
+      <if test="record.unitPrice != null" >
+        UNIT_PRICE = #{record.unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.sum != null" >
+        SUM = #{record.sum,jdbcType=DECIMAL},
+      </if>
+      <if test="record.salesOrderNo != null" >
+        SALES_ORDER_NO = #{record.salesOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.deliveryOrderNo != null" >
+        DELIVERY_ORDER_NO = #{record.deliveryOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.resOne != null" >
+        RES_ONE = #{record.resOne,jdbcType=VARCHAR},
+      </if>
+      <if test="record.resTwo != null" >
+        RES_TWO = #{record.resTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.resThree != null" >
+        RES_THREE = #{record.resThree,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update aiko_delivery_plan
+    set DELIVERY_PLAN_ID = #{record.deliveryPlanId,jdbcType=VARCHAR},
+      "CONTRACT_ITEM" = #{record.contractItem,jdbcType=VARCHAR},
+      PLAN_NO = #{record.planNo,jdbcType=INTEGER},
+      PLAN_DATE = #{record.planDate,jdbcType=DATE},
+      MATERIEL_NO = #{record.materielNo,jdbcType=VARCHAR},
+      MATERIEL_DES = #{record.materielDes,jdbcType=VARCHAR},
+      MOUNT = #{record.mount,jdbcType=INTEGER},
+      UNIT = #{record.unit,jdbcType=VARCHAR},
+      UNIT_PRICE = #{record.unitPrice,jdbcType=DECIMAL},
+      SUM = #{record.sum,jdbcType=DECIMAL},
+      SALES_ORDER_NO = #{record.salesOrderNo,jdbcType=VARCHAR},
+      DELIVERY_ORDER_NO = #{record.deliveryOrderNo,jdbcType=VARCHAR},
+      RES_ONE = #{record.resOne,jdbcType=VARCHAR},
+      RES_TWO = #{record.resTwo,jdbcType=VARCHAR},
+      RES_THREE = #{record.resThree,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.aiko.deliveryplan.dto.AikoDeliveryPlan" >
+    update aiko_delivery_plan
+    <set >
+      <if test="contractItem != null" >
+        "CONTRACT_ITEM" = #{contractItem,jdbcType=VARCHAR},
+      </if>
+      <if test="planNo != null" >
+        PLAN_NO = #{planNo,jdbcType=INTEGER},
+      </if>
+      <if test="planDate != null" >
+        PLAN_DATE = #{planDate,jdbcType=DATE},
+      </if>
+      <if test="materielNo != null" >
+        MATERIEL_NO = #{materielNo,jdbcType=VARCHAR},
+      </if>
+      <if test="materielDes != null" >
+        MATERIEL_DES = #{materielDes,jdbcType=VARCHAR},
+      </if>
+      <if test="mount != null" >
+        MOUNT = #{mount,jdbcType=INTEGER},
+      </if>
+      <if test="unit != null" >
+        UNIT = #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="unitPrice != null" >
+        UNIT_PRICE = #{unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="sum != null" >
+        SUM = #{sum,jdbcType=DECIMAL},
+      </if>
+      <if test="salesOrderNo != null" >
+        SALES_ORDER_NO = #{salesOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryOrderNo != null" >
+        DELIVERY_ORDER_NO = #{deliveryOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="resOne != null" >
+        RES_ONE = #{resOne,jdbcType=VARCHAR},
+      </if>
+      <if test="resTwo != null" >
+        RES_TWO = #{resTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="resThree != null" >
+        RES_THREE = #{resThree,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where DELIVERY_PLAN_ID = #{deliveryPlanId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.aiko.deliveryplan.dto.AikoDeliveryPlan" >
+    update aiko_delivery_plan
+    set "CONTRACT_ITEM" = #{contractItem,jdbcType=VARCHAR},
+      PLAN_NO = #{planNo,jdbcType=INTEGER},
+      PLAN_DATE = #{planDate,jdbcType=DATE},
+      MATERIEL_NO = #{materielNo,jdbcType=VARCHAR},
+      MATERIEL_DES = #{materielDes,jdbcType=VARCHAR},
+      MOUNT = #{mount,jdbcType=INTEGER},
+      UNIT = #{unit,jdbcType=VARCHAR},
+      UNIT_PRICE = #{unitPrice,jdbcType=DECIMAL},
+      SUM = #{sum,jdbcType=DECIMAL},
+      SALES_ORDER_NO = #{salesOrderNo,jdbcType=VARCHAR},
+      DELIVERY_ORDER_NO = #{deliveryOrderNo,jdbcType=VARCHAR},
+      RES_ONE = #{resOne,jdbcType=VARCHAR},
+      RES_TWO = #{resTwo,jdbcType=VARCHAR},
+      RES_THREE = #{resThree,jdbcType=VARCHAR}
+    where DELIVERY_PLAN_ID = #{deliveryPlanId,jdbcType=VARCHAR}
+  </update>
+</mapper>

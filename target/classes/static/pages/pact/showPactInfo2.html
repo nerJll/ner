@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>查看合同</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="stylesheet" type="text/css"
+	href="${ctx}/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css"
+	href="${ctx}/easyui/themes/icon.css">
+<script type="text/javascript" src="${ctx}/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="${ctx}/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript"
+	src="${ctx}/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="${ctx}/js/common/contract.js"></script>
+<script>
+function getMyDate(str){  
+    var oDate = new Date(str),  
+    oYear = oDate.getFullYear(),  
+    oMonth = oDate.getMonth()+1,  
+    oDay = oDate.getDate(),  
+    oTime = oYear +'年'+ getzf(oMonth) +'月'+ getzf(oDay) +'日 '//最后拼接时间  
+    return oTime;  
+}; 
+//补0操作
+function getzf(num){  
+  if(parseInt(num) < 10){  
+      num = '0'+num;  
+  }  
+  return num;  
+}
+//下载文件
+function downloadfile(path,fileName){
+	 var url = "${ctx}/test/showPactDown";
+	 var form = $("<form></form>").attr("action", url).attr("method", "post");
+	 form.append($("<input></input>").attr("type", "hidden").attr("name", "path").attr("value", path));
+	 form.append($("<input></input>").attr("type", "hidden").attr("name", "fileName").attr("value", fileName));
+	 form.appendTo('body').submit().remove();
+}
+//页面加载启动
+$(function(){
+	if(!!window.ActiveXObject || "ActiveXObject" in window ||(navigator.userAgent.indexOf("Edge") > -1)){
+		$.messager.alert("提示消息","当前浏览器对数据处理兼容性不是太好，建议换其他浏览器访问以保证数据的准确性。")
+	}
+	$.ajax({
+		type : "get",
+		url : "${ctx}/pact/showPact",
+		dataType : "json",
+		success : function(data){
+			var arr = new Array()
+			//alert(data.state)
+			jiaZaiBD(data.state,data.contractId)
+			if(data.state=="审批中"){
+				$("#tjsap").hide()
+			}else{
+				$("#ch").hide()	
+			}
+			if(data.resOne!=null&&data.resOne!=''){
+			arr= data.resOne.split(",")
+			}else{
+				$("#fujian").append(`<tr><td>无附件</td></tr>`)
+			}
+			for(var i=0;i<arr.length; i++){
+				var arr1 = new Array()
+				arr1 = arr[i].split("\\")
+				var pth = arr1[arr1.length-2]
+				var filename = arr1[arr1.length-1]
+				$("#fujian").append(`<tr><td><a href="#" onclick="downloadfile('${pth}','${filename}')">${filename}</a></td></tr>`)
+			}
+			$("#contractType").textbox('setValue',data.contractType)
+			$("#isformate").textbox('setValue',data.isformate)
+			$("#serviceModel").textbox('setValue',data.serviceModel)
+			$("#purchaseNo").textbox('setValue',data.purchaseNo)
+			$("#saleorg").textbox('setValue',data.saleOrg)
+			$("#saleWay").textbox('setValue',data.saleWay)
+			$('#contractno').val(data.contractNo)
+			$("#saleGroup").textbox('setValue',data.saleGroup)
+			$("#customerNo").textbox('setValue',data.customerNo+" "+data.customerName)
+			$("#resThree").textbox('setValue',data.purchaseNo)
+			$("#statime").textbox('setValue',getMyDate(data.staTime))
+			$("#endTime").textbox('setValue',getMyDate(data.endTime))
+			$('#paymentWay').textbox('setValue',data.paymentWay)
+			$("#saleFunc").textbox('setValue',data.saleFunc)
+			$("#period").textbox('setValue',data.period)
+			$("#paymentTerm").textbox('setValue',data.paymentTerm)
+			$("#tradeTerm").textbox('setValue',data.tradeTerm)
+			$("#currency").textbox('setValue',data.currency)
+			$("#employee").textbox('setValue',data.employee)
+			$('#resTwo').textbox('setValue',data.resTwo)
+			/*$("#contractType").combobox('setValue',data.contractType)
+			 if (data.isformate == "是") {
+			        $("input:radio[name='isformate']").get(0).checked=true;
+			}else if(data.isformate == "否"){
+			        $("input:radio[name='isformate']").get(1).checked=true;
+		 	} */
+			$('#pde').datagrid({
+				onClickRow: function (index, row) { 
+						//alert(row.contractNo)
+						$('#plan1').datagrid({
+						url : '${ctx}/pact/getfalseplan',
+						columns : [ [ {field : 'contractItem',title : '合同项目',width : 100}, 
+							{field : 'planNo',title : '计划号',width : 100}, 
+							{field : 'planDate',title : '计划日期',formatter : formatDate,width : 100}, 
+							{field : 'materielNo',title : '物料编码',width : 100}, 
+							{field : 'materielDes',title : '物料描述',width : 100}, 
+							{field : 'mount',title : '数量	',width : 100}, 
+							{field : 'unit',title : '单位',width : 100}, 
+							{field : 'unitPrice',title : '单价',width : 100}, 
+							{field : 'sum',title : '金额',width : 100}, 
+							{field : 'salesOrderNo',title : '销售订单',width : 100}, 
+							{field : 'deliveryOrderNo',title : '交货单',width : 100} 
+							] ]
+						 });
+					 }
+			});
+		/* 	$('#pde').datagrid('updateRow',{
+				index: 1,
+				row: {
+					name: 'materielNo',
+					note: '1123'
+				}
+			});  */
+		}
+	});
+	//alert($('contract.contractId'))
+	//$("#dg").find("tr:eq(2)").find("td:eq(0)").html(2)
+	//alert($("#dg").find("tr:eq(2)").find("td:eq(0)").html())
+})
+
+function jiaZaiBD(state,conid){
+	if(state=="审批中"){
+		$('#pde').datagrid({
+				url : '${ctx}/pact/getDetail/'+conid,
+				columns : [ [ {field : 'contractDetailNo',title : '项目',width :40}, 
+								{field : 'silicon',title : '硅片晶体',width : 40},
+								{field : 'mainGrid',title : '主珊',width : 40}, 
+								{field : 'tech',title : '工艺',width : 40}, 
+								{field : 'convertRate',title : '转换率（%）',width : 40}, 
+								{field : 'grade',title : '等级',width : 40}, 
+								{field : 'mount',title : '数量',width : 40}, 
+								{field : 'unit',title : '单位',width : 20}, 
+								{field : 'unitCost',title : '单价	',width : 40}, 
+								{field : 'sum',title : '金额',width : 50}, 
+								{field : 'deliveryState',title : '交货状态',width : 50}, 
+								{field : 'billState',title : '发票状态',width : 50}
+								] ]
+		});
+	}else{
+		$('#pde').datagrid({
+			url : '${ctx}/pact/getDetail/'+conid,
+			columns : [ [ {field : 'contractDetailNo',title : '项目',width :40}, 
+							{field : 'materielNo',title : '物料编码',width : 60,
+								editor:{
+									type:'combobox',
+									options:{
+										valueField:'materielNo',
+										textField:'materielNo',
+										method:'get',
+										url:'${ctx}/test/getFalseMetria',
+										required:true
+								}
+								}
+							},
+							{field : 'materielDes',title : '描述',width : 100}, 
+							{field : 'mount',title : '数量',width : 40}, 
+							{field : 'unit',title : '单位',width : 20}, 
+							{field : 'unitCost',title : '单价	',width : 40}, 
+							{field : 'sum',title : '金额',width : 50}, 
+							{field : 'deliveryState',title : '交货状态',width : 50}, 
+							{field : 'billState',title : '发票状态',width : 50}
+							] ]
+	});
+	}
+}
+
+//撤回申请
+function chehui(){
+		$.messager.confirm("消息提示","确定要撤回吗？",function(r){
+			if(r){
+				$.messager.confirm("消息提示","撤回成功",function(r){
+					if(r){
+						location.href="${ctx}/pact/index"
+					}else{
+						location.href="${ctx}/pact/index"
+					}
+				})
+			}
+		})
+	
+}
+//查看流程
+function chakanlc(){
+	$.messager.alert("消息提示","流程如图")
+}
+function tiJiaoSAP(){
+	$.messager.confirm("消息提示","确定要提交SAP吗？",function(r){
+		if(r){
+			$.messager.confirm("消息提示","提交成功",function(r){
+				if(r){
+					location.href="${ctx}/pact/index"
+				}else{
+					location.href="${ctx}/pact/index"
+				}
+			})
+		}
+	})
+}
+</script>
+</head>
+<body class="easyui-layout">
+	<div data-options="region:'center',title:'查看合同'">
+		<div style="background-color: #F0F8FF; height: 100%"
+			class="easyui-panel">
+			<form id="pact" action="${ctx}/contract/insertContract" method="post">
+				<table style="width: 100%; border-collapse: collapse;">
+					<tr style="height: 10px"></tr>
+					<tr>
+						<td>合同类型：</td>
+						<td><input style="width: 180px" class="easyui-textbox"
+							id="contractType" readonly="readonly" type="text"
+							name="contractType" /></td>
+						<td width="100"></td>
+						<td>格式合同：</td>
+						<td><input style="width: 180px" class="easyui-textbox"
+							id="isformate" readonly="readonly" type="text" name="isformate" />
+						</td>
+						<td width="100"></td>
+						<td>业务模式：</td>
+						<td><input style="width: 180px" class="easyui-textbox"
+							id="serviceModel" readonly="readonly" type="text"
+							name="serviceModel" /></td>
+						<td width="100"></td>
+						<td>采购合同引擎：</td>
+						<td><input style="width: 180px" class="easyui-textbox"
+							id="saleFunc" readonly="readonly" type="text" name="saleFunc" /></td>
+					</tr>
+					<tr style="height: 10px"></tr>
+					<tr>
+						<td>销售组织：</td>
+						<td><input style="width: 180px" class="easyui-textbox"
+							id="saleorg" readonly="readonly" type="text" name="saleorg" /></td>
+						<td width="100"></td>
+						<td>分销渠道：</td>
+						<td><input style="width: 180px" class="easyui-textbox"
+							id="saleWay" readonly="readonly" type="text" name="saleWay" /></td>
+						<td width="100"></td>
+						<td>销售组：</td>
+						<td><input style="width: 180px" class="easyui-textbox"
+							id="saleGroup" readonly="readonly" type="text" name="saleGroup" />
+						</td>
+						<td width="100"></td>
+						<td>合同编码：</td>
+						<td><input
+							style="width: 180px; height: 18px; background-color: #F0F8FF; border-radius: 5px;"
+							id="contractno" name="contractNo" type="text"
+							readonly="readonly" /></td>
+					</tr>
+					<tr style="height: 10px"></tr>
+					<tr style="background-color: #CAE1FF; height: 30px;">
+						<td colspan="11"><b>合同摘要</b></td>
+					</tr>
+					<tr style="height: 10px"></tr>
+					<tr>
+						<input type="hidden" name="customerNo" value="11" />
+						<td>客户：</td>
+						<td><input style="width: 180px" class="easyui-textbox"
+							id="customerNo" readonly="readonly" type="text" name="customerNo" />
+							</input></td>
+						<td width="100"></td>
+						<td>客户采购编码：</td>
+						<td><input style="width: 180px" class="easyui-textbox"
+							id="resThree" readonly="readonly" type="text"
+							name="purchaseNo" /></td>
+						<td width="100"></td>
+						<td>有效期从：</td>
+						<td><input style="width: 180px" class="easyui-textbox"
+							id="statime" readonly="readonly" type="text" name="staTime" /></td>
+						<td width="100"></td>
+						<td>有效期至：</td>
+						<td><input style="width: 180px" class="easyui-textbox"
+							id="endTime" readonly="readonly" type="text" name="endTime" /></td>
+					</tr>
+					<tr style="height: 10px"></tr>
+					<tr>
+						<!-- <td>销售方式：</td>
+						<td><input style="width: 180px" class="easyui-textbox"
+							id="saleFunc" readonly="readonly" type="text" name="saleFunc" /></td>
+						<td width="100"></td>
+						<td>分期数：</td>
+						<td><input style="width: 180px" class="easyui-textbox"
+							id="period" readonly="readonly" type="text" name="period" /></td> -->
+						<td>贸易条款：</td>
+						<td><input style="width: 180px" class="easyui-textbox"
+							id="tradeTerm" readonly="readonly" type="text" name="tradeTerm" />
+						</td>
+						<td width="100"></td>
+						<td>货币类型：</td>
+						<td><input style="width: 180px" class="easyui-textbox"
+							id="currency" readonly="readonly" type="text" name="currency" />
+						</td>
+						<td width="100"></td>
+						<td>付款方式：</td>
+						<td><input style="width: 180px" class="easyui-textbox"
+							id="paymentWay" readonly="readonly" type="text" name="paymentWay" />
+						</td>
+						<td width="100"></td>
+						<td>付款条件：</td>
+						<td><input style="width: 180px" class="easyui-textbox"
+							id="paymentTerm" readonly="readonly" type="text"
+							name="paymentTerm" /></td>
+					</tr>
+					<tr style="height: 10px"></tr>
+					<tr>
+						<td>销售雇员：</td>
+						<td><input style="width: 180px" class="easyui-textbox"
+							id="employee" readonly="readonly" type="text" name="employee" />
+						</td>
+						<td width="100"></td>
+					</tr>
+					<tr style="height: 10px"></tr>
+					<tr style="background-color: #CAE1FF; height: 30px;">
+						<td colspan="11"><b>合同标的</b></td>
+					</tr>
+				</table>
+				<div style="height: 308px">
+					<table class="easyui-datagrid" id="pde"
+						data-options="method:'get',
+					border:false,collapsible:true,singleSelect:true,fit:true,
+					fitColumns:true,pagination:true,rownumbers:true">
+					</table>
+				</div>
+				<table style="width: 100%">
+					<tr style="width: 100%; height: 30px; background-color: #D1EEEE">
+						<td><font size=2><b>交货计划</b></font></td>
+					</tr>
+				</table>
+				<div style="height:308px">
+				<table class="easyui-datagrid" id="plan1"
+					data-options="method:'get',
+					border:false,collapsible:true,singleSelect:true,fit:true,
+					fitColumns:true,pagination:true,rownumbers:true">
+				</table>
+				</div>
+				<table style="width: 100%">
+				<tr style="background-color: #CAE1FF; height: 30px;">
+					<td colspan="11"><b>补充/变更摘要</b></td>
+				</tr>
+				<tr>
+					<td><input class="easyui-textbox" name="resTwo" id="resTwo" readonly
+						data-options="multiline:true" style="height: 60px; width: 100%;"></input></td>
+				</tr>
+			</table>
+				<div>
+					<table id="fujian" style="width: 100%;">
+						<tr style="background-color: #CAE1FF; height: 30px;">
+							<td colspan="11"><b>附件</b></td>
+					</table>
+				</div>
+				<table style="width: 100%;">
+				<tr style="background-color: #CAE1FF; height: 30px;">
+					<td colspan="11"><center>
+							<input
+									style="width: 70px; height: 35px; border-radius: 5px;"
+									onclick="tiJiaoSAP()" id="tjsap" type="button" value="提交SAP">
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+									style="width: 60px; height: 35px; border-radius: 5px;"
+									onclick="chehui()" id="ch" type="button" value="撤回">
+						</center></td>
+			</table>
+			</form>
+		</div>
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aiko.pactdetail.dao.AikoContractDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.aiko.pactdetail.dto.AikoContractDetail" >
+    <id column="CONTRACT_DETAIL_ID" property="contractDetailId" jdbcType="VARCHAR" />
+    <result column="CONTRACT_DETAIL_NO" property="contractDetailNo" jdbcType="VARCHAR" />
+    <result column="MATERIEL_NO" property="materielNo" jdbcType="VARCHAR" />
+    <result column="MATERIEL_DES" property="materielDes" jdbcType="VARCHAR" />
+    <result column="MOUNT" property="mount" jdbcType="INTEGER" />
+    <result column="UNIT" property="unit" jdbcType="VARCHAR" />
+    <result column="UNIT_COST" property="unitCost" jdbcType="DECIMAL" />
+    <result column="SUM" property="sum" jdbcType="DECIMAL" />
+    <result column="ORDER_STATE" property="orderState" jdbcType="VARCHAR" />
+    <result column="DELIVERY_STATE" property="deliveryState" jdbcType="VARCHAR" />
+    <result column="BILL_STATE" property="billState" jdbcType="VARCHAR" />
+    <result column="SILICON" property="silicon" jdbcType="VARCHAR" />
+    <result column="MAIN_GRID" property="mainGrid" jdbcType="VARCHAR" />
+    <result column="TECH" property="tech" jdbcType="VARCHAR" />
+    <result column="CONVERT_RATE" property="convertRate" jdbcType="VARCHAR" />
+    <result column="GRADE" property="grade" jdbcType="VARCHAR" />
+    <result column="CONTRACT_ID" property="contractId" jdbcType="VARCHAR" />
+    <result column="RES_ONE" property="resOne" jdbcType="VARCHAR" />
+    <result column="RES_TWO" property="resTwo" jdbcType="VARCHAR" />
+    <result column="RES_THREE" property="resThree" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    CONTRACT_DETAIL_ID, CONTRACT_DETAIL_NO, MATERIEL_NO, MATERIEL_DES, MOUNT, UNIT, UNIT_COST, 
+    SUM, ORDER_STATE, DELIVERY_STATE, BILL_STATE, SILICON, MAIN_GRID, TECH, CONVERT_RATE, 
+    GRADE, CONTRACT_ID, RES_ONE, RES_TWO, RES_THREE
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.aiko.pactdetail.dto.AikoContractDetailExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from aiko_contract_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from aiko_contract_detail
+    where CONTRACT_DETAIL_ID = #{contractDetailId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from aiko_contract_detail
+    where CONTRACT_DETAIL_ID = #{contractDetailId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.aiko.pactdetail.dto.AikoContractDetailExample" >
+    delete from aiko_contract_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.aiko.pactdetail.dto.AikoContractDetail" >
+    insert into aiko_contract_detail (CONTRACT_DETAIL_ID, CONTRACT_DETAIL_NO, 
+      MATERIEL_NO, MATERIEL_DES, MOUNT, 
+      UNIT, UNIT_COST, SUM, 
+      ORDER_STATE, DELIVERY_STATE, BILL_STATE, 
+      SILICON, MAIN_GRID, TECH, 
+      CONVERT_RATE, GRADE, CONTRACT_ID, 
+      RES_ONE, RES_TWO, RES_THREE
+      )
+    values (#{contractDetailId,jdbcType=VARCHAR}, #{contractDetailNo,jdbcType=VARCHAR}, 
+      #{materielNo,jdbcType=VARCHAR}, #{materielDes,jdbcType=VARCHAR}, #{mount,jdbcType=INTEGER}, 
+      #{unit,jdbcType=VARCHAR}, #{unitCost,jdbcType=DECIMAL}, #{sum,jdbcType=DECIMAL}, 
+      #{orderState,jdbcType=VARCHAR}, #{deliveryState,jdbcType=VARCHAR}, #{billState,jdbcType=VARCHAR}, 
+      #{silicon,jdbcType=VARCHAR}, #{mainGrid,jdbcType=VARCHAR}, #{tech,jdbcType=VARCHAR}, 
+      #{convertRate,jdbcType=VARCHAR}, #{grade,jdbcType=VARCHAR}, #{contractId,jdbcType=VARCHAR}, 
+      #{resOne,jdbcType=VARCHAR}, #{resTwo,jdbcType=VARCHAR}, #{resThree,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.aiko.pactdetail.dto.AikoContractDetail" >
+    insert into aiko_contract_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="contractDetailId != null" >
+        CONTRACT_DETAIL_ID,
+      </if>
+      <if test="contractDetailNo != null" >
+        CONTRACT_DETAIL_NO,
+      </if>
+      <if test="materielNo != null" >
+        MATERIEL_NO,
+      </if>
+      <if test="materielDes != null" >
+        MATERIEL_DES,
+      </if>
+      <if test="mount != null" >
+        MOUNT,
+      </if>
+      <if test="unit != null" >
+        UNIT,
+      </if>
+      <if test="unitCost != null" >
+        UNIT_COST,
+      </if>
+      <if test="sum != null" >
+        SUM,
+      </if>
+      <if test="orderState != null" >
+        ORDER_STATE,
+      </if>
+      <if test="deliveryState != null" >
+        DELIVERY_STATE,
+      </if>
+      <if test="billState != null" >
+        BILL_STATE,
+      </if>
+      <if test="silicon != null" >
+        SILICON,
+      </if>
+      <if test="mainGrid != null" >
+        MAIN_GRID,
+      </if>
+      <if test="tech != null" >
+        TECH,
+      </if>
+      <if test="convertRate != null" >
+        CONVERT_RATE,
+      </if>
+      <if test="grade != null" >
+        GRADE,
+      </if>
+      <if test="contractId != null" >
+        CONTRACT_ID,
+      </if>
+      <if test="resOne != null" >
+        RES_ONE,
+      </if>
+      <if test="resTwo != null" >
+        RES_TWO,
+      </if>
+      <if test="resThree != null" >
+        RES_THREE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="contractDetailId != null" >
+        #{contractDetailId,jdbcType=VARCHAR},
+      </if>
+      <if test="contractDetailNo != null" >
+        #{contractDetailNo,jdbcType=VARCHAR},
+      </if>
+      <if test="materielNo != null" >
+        #{materielNo,jdbcType=VARCHAR},
+      </if>
+      <if test="materielDes != null" >
+        #{materielDes,jdbcType=VARCHAR},
+      </if>
+      <if test="mount != null" >
+        #{mount,jdbcType=INTEGER},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="unitCost != null" >
+        #{unitCost,jdbcType=DECIMAL},
+      </if>
+      <if test="sum != null" >
+        #{sum,jdbcType=DECIMAL},
+      </if>
+      <if test="orderState != null" >
+        #{orderState,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryState != null" >
+        #{deliveryState,jdbcType=VARCHAR},
+      </if>
+      <if test="billState != null" >
+        #{billState,jdbcType=VARCHAR},
+      </if>
+      <if test="silicon != null" >
+        #{silicon,jdbcType=VARCHAR},
+      </if>
+      <if test="mainGrid != null" >
+        #{mainGrid,jdbcType=VARCHAR},
+      </if>
+      <if test="tech != null" >
+        #{tech,jdbcType=VARCHAR},
+      </if>
+      <if test="convertRate != null" >
+        #{convertRate,jdbcType=VARCHAR},
+      </if>
+      <if test="grade != null" >
+        #{grade,jdbcType=VARCHAR},
+      </if>
+      <if test="contractId != null" >
+        #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="resOne != null" >
+        #{resOne,jdbcType=VARCHAR},
+      </if>
+      <if test="resTwo != null" >
+        #{resTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="resThree != null" >
+        #{resThree,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.aiko.pactdetail.dto.AikoContractDetailExample" resultType="java.lang.Integer" >
+    select count(*) from aiko_contract_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update aiko_contract_detail
+    <set >
+      <if test="record.contractDetailId != null" >
+        CONTRACT_DETAIL_ID = #{record.contractDetailId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contractDetailNo != null" >
+        CONTRACT_DETAIL_NO = #{record.contractDetailNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.materielNo != null" >
+        MATERIEL_NO = #{record.materielNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.materielDes != null" >
+        MATERIEL_DES = #{record.materielDes,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mount != null" >
+        MOUNT = #{record.mount,jdbcType=INTEGER},
+      </if>
+      <if test="record.unit != null" >
+        UNIT = #{record.unit,jdbcType=VARCHAR},
+      </if>
+      <if test="record.unitCost != null" >
+        UNIT_COST = #{record.unitCost,jdbcType=DECIMAL},
+      </if>
+      <if test="record.sum != null" >
+        SUM = #{record.sum,jdbcType=DECIMAL},
+      </if>
+      <if test="record.orderState != null" >
+        ORDER_STATE = #{record.orderState,jdbcType=VARCHAR},
+      </if>
+      <if test="record.deliveryState != null" >
+        DELIVERY_STATE = #{record.deliveryState,jdbcType=VARCHAR},
+      </if>
+      <if test="record.billState != null" >
+        BILL_STATE = #{record.billState,jdbcType=VARCHAR},
+      </if>
+      <if test="record.silicon != null" >
+        SILICON = #{record.silicon,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mainGrid != null" >
+        MAIN_GRID = #{record.mainGrid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tech != null" >
+        TECH = #{record.tech,jdbcType=VARCHAR},
+      </if>
+      <if test="record.convertRate != null" >
+        CONVERT_RATE = #{record.convertRate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.grade != null" >
+        GRADE = #{record.grade,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contractId != null" >
+        CONTRACT_ID = #{record.contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.resOne != null" >
+        RES_ONE = #{record.resOne,jdbcType=VARCHAR},
+      </if>
+      <if test="record.resTwo != null" >
+        RES_TWO = #{record.resTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.resThree != null" >
+        RES_THREE = #{record.resThree,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update aiko_contract_detail
+    set CONTRACT_DETAIL_ID = #{record.contractDetailId,jdbcType=VARCHAR},
+      CONTRACT_DETAIL_NO = #{record.contractDetailNo,jdbcType=VARCHAR},
+      MATERIEL_NO = #{record.materielNo,jdbcType=VARCHAR},
+      MATERIEL_DES = #{record.materielDes,jdbcType=VARCHAR},
+      MOUNT = #{record.mount,jdbcType=INTEGER},
+      UNIT = #{record.unit,jdbcType=VARCHAR},
+      UNIT_COST = #{record.unitCost,jdbcType=DECIMAL},
+      SUM = #{record.sum,jdbcType=DECIMAL},
+      ORDER_STATE = #{record.orderState,jdbcType=VARCHAR},
+      DELIVERY_STATE = #{record.deliveryState,jdbcType=VARCHAR},
+      BILL_STATE = #{record.billState,jdbcType=VARCHAR},
+      SILICON = #{record.silicon,jdbcType=VARCHAR},
+      MAIN_GRID = #{record.mainGrid,jdbcType=VARCHAR},
+      TECH = #{record.tech,jdbcType=VARCHAR},
+      CONVERT_RATE = #{record.convertRate,jdbcType=VARCHAR},
+      GRADE = #{record.grade,jdbcType=VARCHAR},
+      CONTRACT_ID = #{record.contractId,jdbcType=VARCHAR},
+      RES_ONE = #{record.resOne,jdbcType=VARCHAR},
+      RES_TWO = #{record.resTwo,jdbcType=VARCHAR},
+      RES_THREE = #{record.resThree,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.aiko.pactdetail.dto.AikoContractDetail" >
+    update aiko_contract_detail
+    <set >
+      <if test="contractDetailNo != null" >
+        CONTRACT_DETAIL_NO = #{contractDetailNo,jdbcType=VARCHAR},
+      </if>
+      <if test="materielNo != null" >
+        MATERIEL_NO = #{materielNo,jdbcType=VARCHAR},
+      </if>
+      <if test="materielDes != null" >
+        MATERIEL_DES = #{materielDes,jdbcType=VARCHAR},
+      </if>
+      <if test="mount != null" >
+        MOUNT = #{mount,jdbcType=INTEGER},
+      </if>
+      <if test="unit != null" >
+        UNIT = #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="unitCost != null" >
+        UNIT_COST = #{unitCost,jdbcType=DECIMAL},
+      </if>
+      <if test="sum != null" >
+        SUM = #{sum,jdbcType=DECIMAL},
+      </if>
+      <if test="orderState != null" >
+        ORDER_STATE = #{orderState,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryState != null" >
+        DELIVERY_STATE = #{deliveryState,jdbcType=VARCHAR},
+      </if>
+      <if test="billState != null" >
+        BILL_STATE = #{billState,jdbcType=VARCHAR},
+      </if>
+      <if test="silicon != null" >
+        SILICON = #{silicon,jdbcType=VARCHAR},
+      </if>
+      <if test="mainGrid != null" >
+        MAIN_GRID = #{mainGrid,jdbcType=VARCHAR},
+      </if>
+      <if test="tech != null" >
+        TECH = #{tech,jdbcType=VARCHAR},
+      </if>
+      <if test="convertRate != null" >
+        CONVERT_RATE = #{convertRate,jdbcType=VARCHAR},
+      </if>
+      <if test="grade != null" >
+        GRADE = #{grade,jdbcType=VARCHAR},
+      </if>
+      <if test="contractId != null" >
+        CONTRACT_ID = #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="resOne != null" >
+        RES_ONE = #{resOne,jdbcType=VARCHAR},
+      </if>
+      <if test="resTwo != null" >
+        RES_TWO = #{resTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="resThree != null" >
+        RES_THREE = #{resThree,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where CONTRACT_DETAIL_ID = #{contractDetailId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.aiko.pactdetail.dto.AikoContractDetail" >
+    update aiko_contract_detail
+    set CONTRACT_DETAIL_NO = #{contractDetailNo,jdbcType=VARCHAR},
+      MATERIEL_NO = #{materielNo,jdbcType=VARCHAR},
+      MATERIEL_DES = #{materielDes,jdbcType=VARCHAR},
+      MOUNT = #{mount,jdbcType=INTEGER},
+      UNIT = #{unit,jdbcType=VARCHAR},
+      UNIT_COST = #{unitCost,jdbcType=DECIMAL},
+      SUM = #{sum,jdbcType=DECIMAL},
+      ORDER_STATE = #{orderState,jdbcType=VARCHAR},
+      DELIVERY_STATE = #{deliveryState,jdbcType=VARCHAR},
+      BILL_STATE = #{billState,jdbcType=VARCHAR},
+      SILICON = #{silicon,jdbcType=VARCHAR},
+      MAIN_GRID = #{mainGrid,jdbcType=VARCHAR},
+      TECH = #{tech,jdbcType=VARCHAR},
+      CONVERT_RATE = #{convertRate,jdbcType=VARCHAR},
+      GRADE = #{grade,jdbcType=VARCHAR},
+      CONTRACT_ID = #{contractId,jdbcType=VARCHAR},
+      RES_ONE = #{resOne,jdbcType=VARCHAR},
+      RES_TWO = #{resTwo,jdbcType=VARCHAR},
+      RES_THREE = #{resThree,jdbcType=VARCHAR}
+    where CONTRACT_DETAIL_ID = #{contractDetailId,jdbcType=VARCHAR}
+  </update>
+</mapper>
