@@ -431,26 +431,6 @@ $(function(){
 			
 		}
 	});
-	var radio = $('input:radio[name="serviceModel"]')
-	radio.change( function () {
-		var v = $(this).val()
-		if (v === '普通销售') {
-			$('#buycont').attr('readonly', 'readonly').val('')
-		} else {
-			$('#buycont').removeAttr('readonly').val('')
-		}
-	})
-	$('#contractType').combobox({
-		onChange: function () {
-			if ($(this).val() == '框架协议') {
-				$('#pact-detail').css('display','none')
-				$('#dg').css('display','none')
-			} else {
-				$('#pact-detail').css('display','')
-				$('#dg').css('display','')
-			}
-		}
-	})
 })
 //文件上传
 function fileupload() {
@@ -707,12 +687,9 @@ function choseWLInfo(wlNo,wlNa){
 						name="serviceModel" value="双经销">双经销</td>
 					<td width="100"></td>
 					<td>采购合同引擎：</td>
-					<td>
-						<input style="width: 180px" id="buycont" type="text" name="saleFunc">
-					</td>
-					<!-- <td><input style="width: 180px" class="easyui-textbox"
+					<td><input style="width: 180px" class="easyui-textbox"
 						id="buycont" name="saleFunc" type="text"
-						data-options="prompt:'请输入采购合同引擎',required:false" /></td> -->
+						data-options="prompt:'请输入采购合同引擎',required:false" /></td>
 				</tr>
 				<tr style="height: 10px"></tr>
 				<tr>

@@ -98,21 +98,20 @@ public class SAPUtils {
 		// PRACCOUNT参数
 		List<JcoParams> praccountxList = new ArrayList<JcoParams>();
 		//params.setValue("PRACCOUNTX", praccountxList);
-		for(int i=0; i<plans.size(); i++){
+		/*for(int i=0; i<plans.size(); i++){
 			praccountxList.add(
 					new JcoParams()
-					/*.setValue("VBELN", contract.getContractNo())
-					.setValue("POSNR", plans.get(i).getResOne())
-					.setValue("ETENR", plans.get(i).getPlanNo())
-					.setValue("EDATU", DateUtil.getDateFormat(plans.get(i).getPlanDate()))
-					.setValue("WMENG", plans.get(i).getMount())*/
-					.setValue("VBELN", "123455")
-					.setValue("POSNR", "123321")
-					.setValue("ETENR", i+1)
+					/*.setValue("POSNR", "123")
+					.setValue("ETENR", "123")
+					.setValue("POSNR", 123)*/
+					/*.setValue("ETENR", 123)
 					.setValue("EDATU", "2017-09-01")
-					.setValue("WMENG", "22")
+					.setValue("WMENG", 123)
+					.setValue("VRKME", "123")
+					.setValue("KBETR", "123")
+					.setValue("KBETR", 123)
 				);
-		}
+		}*/
 		
 		JcoResult result = SapApi.executeFunction(functionName, params);
 		long end=System.currentTimeMillis();

@@ -73,7 +73,7 @@ function appendtr() {
 		$("#dg")
 				.append(
 						"<tr>"
-								+ "<td><input name='index' style='width: 20px; height: 20px' type='checkbox' /></td>"
+								+ "<td><input name='di' style='width: 20px; height: 20px' type='checkbox' /></td>"
 								+ "<td><input type='text' name='materielNo' style='width: 30px;' readonly='readonly' /></td>"
 								+ "<td><select style='width: 100%; height: 25px' name='silicon'> <option value='单晶'>单晶</option> <option value='多晶'>多晶</option> <option value='PERC'>PERC</option></select></td>"
 								+ "<td><select style='width: 100%; height: 25px' name='mainGrid'> <option value='四主栅'>四主栅</option> <option value='五主栅'>五主栅</option> </select></td>"
@@ -134,7 +134,7 @@ function getbiaodi(){
 function queplan(){ //jquery获取复选框值 
 	var chk_value =[]; 
 	var cid = ""
-	$('input[name="index"]:checked').each(function(){ 
+	$('input[name="di"]:checked').each(function(){ 
 		chk_value.push($(this).val()); 
 		cid = $(this).parent().parent().find("input[name='contractDetailId']").val()
 	}); 
@@ -189,7 +189,7 @@ function removeit() {
 	$.messager.confirm('警告框', '确定删除?', function(r){
 		if (r){
 			var ids = new Array()
-			$("input[name='index']:checked").each(function() { // 遍历选中的checkbox
+			$("input[name='di']:checked").each(function() { // 遍历选中的checkbox
 				var id = $(this).parents("tr").find("input[name='contractDetailId']").val()
 				ids.push(id)
 				n = $(this).parents("tr").index(); // 获取checkbox所在行的顺序
@@ -241,26 +241,6 @@ function downloadfile(path,fileName){
 	 form.appendTo('body').submit().remove();
 }
 $(function(){
-	var radio = $('input:radio[name="serviceModel"]')
-	radio.change( function () {
-		var v = $(this).val()
-		if (v === '普通销售') {
-			$('#buycont').attr('readonly', 'readonly').val('')
-		} else {
-			$('#buycont').removeAttr('readonly').val('')
-		}
-	})
-	$('#contractType').combobox({
-		onChange: function () {
-			if ($(this).val() == '框架协议') {
-				$('#pact-detail').css('display','none')
-				$('#dg').css('display','none')
-			} else {
-				$('#pact-detail').css('display','')
-				$('#dg').css('display','')
-			}
-		}
-	})
 	if(!!window.ActiveXObject || "ActiveXObject" in window ||(navigator.userAgent.indexOf("Edge") > -1)){
 		$.messager.alert("提示消息","当前浏览器对数据处理兼容性不是太好，建议换其他浏览器访问以保证数据的准确性。")
 	}
@@ -319,6 +299,18 @@ $(function(){
 		dataType: 'json',
 		success: function(data) {
 			console.log(data)
+			if(data.state=="审批中"||data.state=="已审批"){
+				$("#tjsap").hide()
+				$("#addWLBM").hide()
+			}else if(data.state=="已下达"){
+				$("#ch").hide()	
+			}else if(data.state=="已撤销"){
+				$("#tjsap").hide()
+				$("#ch").hide()	
+				$("#addWLBM").hide()
+			}else{
+				$("#ch").hide()	
+			}
 			var arr = new Array()
 			if(data.resOne!=null && data.resOne!=""){
 			arr= data.resOne.split(",")
@@ -363,30 +355,102 @@ $(function(){
 			$('#pactId').val(data.contractId)
 			$('#resTwo').textbox('setValue',data.resTwo)
 			var details = data.pactItem
-			for (let i = 0; i < details.length; i++) {
-				var html = `<tr>
-								<td><input type="checkbox" name="index" style="width: 20px; height: 20px"></td>
-								<td><input type="text" name="materielNo" style="width: 30px;" readonly="readonly"></td>
-								<td><select style="width: 100%; height: 25px" name="silicon"> <option value="单晶">单晶</option> <option value="多晶">多晶</option> <option value="PERC">PERC</option> <option value="${data.pactItem[i].silicon}" selected="selected">${data.pactItem[i].silicon}</option></select></td>
-								<td><select style="width: 100%; height: 25px" name="mainGrid"> <option value="四主栅">四主栅</option> <option value="五主栅">五主栅</option> <option value="${data.pactItem[i].mainGrid}" selected="selected">${data.pactItem[i].mainGrid}</option></select></td>
-								<td><select style="width: 100%; height: 25px" name="tech"> <option value="1">1</option> <option value="2">2</option> <option value="${data.pactItem[i].tech}" selected="selected">${data.pactItem[i].tech}</option></select></td>
-								<td><input type="number" name="convertRate" style="width: 100px;" required="required" value="${data.pactItem[i].convertRate}"></td>
-								<td><select style="width: 100%; height: 25px" name="grade"> <option value="A级">A级</option> <option value="B级">B级</option><option value="C级">C级</option><option value="${data.pactItem[i].grade}" selected="selected">${data.pactItem[i].grade}</option></select></td>
-								<td><input type="number" name="mount" style="width: 100px;"  required="required" value="${data.pactItem[i].mount}"></td>
-								<td><select style="width: 100px; height: 25px"  name="unit"> <option value="W">W</option> <option value="PC">PC</option> <option value="${data.pactItem[i].unit}" selected="selected">${data.pactItem[i].unit}</option> </select></td>
-								<td><input type="number" name="unitCost" style="width: 100px;"  required="required" value="${data.pactItem[i].unitCost}"></td>
-								<td><input type="number" step='0.001' name="sum" style="width: 120px;"  required="required" value="${data.pactItem[i].sum}"></td>
-								<td><input type="text" name="deliveryState" style="width: 80px;" value="${data.pactItem[i].deliveryState}" readonly="readonly"></td>
-								<td><input type="text" name="billState" style="width: 80px;" value="${data.pactItem[i].billState}" readonly="readonly"></td>
-								<td><input type="hidden" step='0.001' name="contractDetailId" value="${data.pactItem[i].contractDetailId}"></td>
-							</tr>`
-				$('#dg').append(html)
+			if(data.state=="审批中"||data.state=="已审批"){
+				$('#dg').append(
+						`<tr>
+						<th style="text-align: center; width: 3%">选择</th>
+						<th style="text-align: center; width: 3%">项目</th>
+						<th style="text-align: center; width: 10%">硅片晶体</th>
+						<th style="text-align: center; width: 10%">主珊</th>
+						<th style="text-align: center; width: 10%">工艺</th>
+						<th style="text-align: center; width: 5%">转换率（%）</th>
+						<th style="text-align: center; width: 5%">等级</th>
+						<th style="text-align: center; width: 10%">数量</th>
+						<th style="text-align: center; width: 10%">单位</th>
+						<th style="text-align: center; width: 10%">单价</th>
+						<th style="text-align: center; width: 10%">金额</th>
+						<th style="text-align: center; width: 10%">交货状态</th>
+						<th style="text-align: center; width: 10%">发票状态</th>
+					</tr>`			
+				)
+				for (let i = 0; i < details.length; i++) {
+					var html = `<tr><td><input type="checkbox" name="di" style="width: 20px; height: 20px"></td>
+									<td><input type="text" name="materielNo" style="width: 30px;" readonly="readonly"></td>
+									<td><select style="width: 100%; height: 25px" name="silicon"> <option value="单晶">单晶</option> <option value="多晶">多晶</option> <option value="PERC">PERC</option> <option value="${data.pactItem[i].silicon}" selected="selected">${data.pactItem[i].silicon}</option></select></td>
+									<td><select style="width: 100%; height: 25px" name="mainGrid"> <option value="四主栅">四主栅</option> <option value="五主栅">五主栅</option> <option value="${data.pactItem[i].mainGrid}" selected="selected">${data.pactItem[i].mainGrid}</option></select></td>
+									<td><select style="width: 100%; height: 25px" name="tech"> <option value="1">1</option> <option value="2">2</option> <option value="${data.pactItem[i].tech}" selected="selected">${data.pactItem[i].tech}</option></select></td>
+									<td><input type="number" name="convertRate" style="width: 100px;" required="required" value="${data.pactItem[i].convertRate}"></td>
+									<td><select style="width: 100%; height: 25px" name="grade"> <option value="A级">A级</option> <option value="B级">B级</option><option value="C级">C级</option><option value="${data.pactItem[i].grade}" selected="selected">${data.pactItem[i].grade}</option></select></td>
+									<td><input type="number" name="mount" style="width: 100px;"  required="required" value="${data.pactItem[i].mount}"></td>
+									<td><select style="width: 100px; height: 25px"  name="unit"> <option value="W">W</option> <option value="PC">PC</option> <option value="${data.pactItem[i].unit}" selected="selected">${data.pactItem[i].unit}</option> </select></td>
+									<td><input type="number" name="unitCost" style="width: 100px;"  required="required" value="${data.pactItem[i].unitCost}"></td>
+									<td><input type="number" step='0.001' name="sum" style="width: 120px;"  required="required" value="${data.pactItem[i].sum}"></td>
+									<td><input type="text" name="deliveryState" style="width: 80px;" value="${data.pactItem[i].deliveryState}" readonly="readonly"></td>
+									<td><input type="text" name="billState" style="width: 80px;" value="${data.pactItem[i].billState}" readonly="readonly"></td>
+									<td><input type="hidden" step='0.001' name="contractDetailId" value="${data.pactItem[i].contractDetailId}"></td>
+								</tr>`
+					$('#dg').append(html)
+				}
+				for (let i = 2; i < details.length + 2; i++) {
+					$("#dg tr:eq(" + i + ")").find("input[name='materielNo']").val(($(this).index() + i) * 10)
+				}
+			}else if(data.state=="已下达"){
+				$('#dg').append(
+						`<tr>
+						<th style="text-align: center; width: 3%">选择</th>
+						<th style="text-align: center; width: 3%">项目</th>
+						<th style="text-align: center; width: 10%">物料编码</th>
+						<th style="text-align: center; width: 20%">描述</th>
+						<th style="text-align: center; width: 10%">数量</th>
+						<th style="text-align: center; width: 10%">单位</th>
+						<th style="text-align: center; width: 10%">单价</th>
+						<th style="text-align: center; width: 10%">金额</th>
+						<th style="text-align: center; width: 10%">交货状态</th>
+						<th style="text-align: center; width: 10%">发票状态</th>
+					</tr>`			
+				)
+				for (let i = 0; i < details.length; i++) {
+					var html = `<tr><td><input type="radio" name='di' value='${details[i].contractDetailId}' style="width: 20px; height: 20px"></td>
+									<td><input type="text" name="contractDetailNo" style="width: 30px;" readonly="readonly"></td>
+									<td></td>
+									<td></td>
+									<td><input type="number" name="mount" style="width: 100px;"  required="required" value="${data.pactItem[i].mount}"></td>
+									<td><select style="width: 100px; height: 25px"  name="unit"> <option value="W">W</option> <option value="PC">PC</option> <option value="${data.pactItem[i].unit}" selected="selected">${data.pactItem[i].unit}</option> </select></td>
+									<td><input type="number" name="unitCost" style="width: 100px;"  required="required" value="${data.pactItem[i].unitCost}"></td>
+									<td><input type="number" step='0.001' name="sum" style="width: 120px;"  required="required" value="${data.pactItem[i].sum}"></td>
+									<td><input type="text" name="deliveryState" style="width: 80px;" value="${data.pactItem[i].deliveryState}" readonly="readonly"></td>
+									<td><input type="text" name="billState" style="width: 80px;" value="${data.pactItem[i].billState}" readonly="readonly"></td>
+									<td><input type="hidden" name="contractDetailId" value="${data.pactItem[i].contractDetailId}"><input type='hidden' name='materielNo'/><input type='hidden' name='materielDes'/></td>
+								</tr>`
+					$('#dg').append(html)
+				}
+				for (let i = 2; i < details.length + 2; i++) {
+					$("#dg tr:eq(" + i + ")").find("input[name='contractDetailNo']").val(($(this).index() + i) * 10)
+				}
 			}
-			for (let i = 2; i < details.length + 2; i++) {
-				$("#dg tr:eq(" + i + ")").find("input[name='materielNo']").val(($(this).index() + i) * 10)
-			}
+			
 		}
 	});
+	var radio = $('input:radio[name="serviceModel"]')
+	radio.change( function () {
+		var v = $(this).val()
+		if (v === '普通销售') {
+			$('#buycont').attr('readonly', 'readonly').val('')
+		} else {
+			$('#buycont').removeAttr('readonly').val('')
+		}
+	})
+	$('#contractType').combobox({
+		onChange: function () {
+			if ($(this).val() == '框架协议') {
+				$('#pact-detail').css('display','none')
+				$('#dg').css('display','none')
+			} else {
+				$('#pact-detail').css('display','')
+				$('#dg').css('display','')
+			}
+		}
+	})
 })
 //文件上传
 function fileupload() {
@@ -537,6 +601,78 @@ $.ajax({
 	 	$("#employee2").combobox("loadData", data1)
 	}
 }) 
+//添加物料编码
+function addWLBM(){
+	var deId = $("input[name='di']:checked").val() //合同标的id
+	//$.messager.alert('消息提示',deId)
+	if(deId=="" || deId==null ){
+		$.messager.alert("消息提示","请选择合同标的")
+	}else{
+		//materielNo materielDes
+		//$("input[name='di']:checked").parents("tr").find("input[name='materielNo']").val(9)
+		$("#wl1").window('open')
+	}
+}
+//获取物料信息
+function getWLInfo(){
+	$("#wlif1").empty()
+	var wlInfo2 = $('#wlinfo2').textbox('getValue')
+	$.ajax({
+		type:"get",
+		//url:"http://portal.aikosolar.com/aiko-crm/sapconfig/execute?functionCode=ZSDCRM004",
+		url:"http://portal.aikosolar.com/aiko-crm/sapconfig/execute?functionCode=ZSDCRM004",
+		cache:true,
+		beforeSend: function () {
+		    $.messager.progress({ 
+		       title: '提示', 
+		       msg: '数据加载中，请稍候……', 
+		       text: '' 
+		    });
+		},
+		complete: function () {
+		         $.messager.progress('close');
+		    },
+		success:function(data){
+			var index1=0;
+			/* for(var i=0;i<data.data.result.length;i++){
+				var code1 = data.data.result[i].code
+				var name1 = data.data.result[i].name
+				var prono = code1 + " " + name1
+				if(prono.indexOf(prono2)>-1){
+						index1++;
+						$("#wlif1").append(`<tr><td>${i+1}</td><td><a
+						href='#' onclick="javascript:choseWLInfo('${code1}','${name1}')">${code1}</a></td><td><a
+						href='#' onclick="javascript:choseWLInfo('${code1}','${name1}')">${name1}</a></td></tr>`)		
+				}
+			}
+			if(index1==0){
+				$.messager.alert("提示","无数据")
+			} */
+			for(var i=0;i<data.data.result.length;i++){
+				var code1 = data.data.result[i].code
+				var name1 = data.data.result[i].name
+				var prono = code1 + " " + name1
+				if(prono.indexOf(wlInfo2)>-1){ //js模糊查询	
+						index1++;
+						$("#wlif1").append(`<tr><td>${i+1}</td><td><a
+						href='#' onclick="javascript:choseWLInfo('${code1}','${name1}')">${code1}</a></td><td><a
+						href='#' onclick="javascript:choseWLInfo('${code1}','${name1}')">${name1}</a></td>
+						<td><a href='#' onclick="javascript:choseWLInfo('${code1}','${name1}')">添加</a></td></tr>`)		
+				}
+			}
+			if(index1==0){
+				$.messager.alert("提示","无数据")
+			}
+		}
+	}) 
+}
+function choseWLInfo(wlNo,wlNa){
+	$("input[name='di']:checked").parents("tr").find("td:eq(2)").html(wlNo)
+	$("input[name='di']:checked").parents("tr").find("td:eq(3)").html(wlNa)
+	$("input[name='di']:checked").parents("tr").find("input[name='materielNo']").val(wlNo)
+	$("input[name='di']:checked").parents("tr").find("input[name='materielDes']").val(wlNa)
+	$.messager.alert("物料信息","添加成功！<br>物料编码："+wlNo+'<br>描述：'+wlNa)
+}
 </script>
 </head>
 <body class="easyui-layout">
@@ -571,9 +707,12 @@ $.ajax({
 						name="serviceModel" value="双经销">双经销</td>
 					<td width="100"></td>
 					<td>采购合同引擎：</td>
-					<td><input style="width: 180px" class="easyui-textbox"
+					<td>
+						<input style="width: 180px" id="buycont" type="text" name="saleFunc">
+					</td>
+					<!-- <td><input style="width: 180px" class="easyui-textbox"
 						id="buycont" name="saleFunc" type="text"
-						data-options="prompt:'请输入采购合同引擎',required:false" /></td>
+						data-options="prompt:'请输入采购合同引擎',required:false" /></td> -->
 				</tr>
 				<tr style="height: 10px"></tr>
 				<tr>
@@ -759,23 +898,11 @@ $.ajax({
 							data-options="iconCls:'icon-remove',plain:true"
 							onclick="removeit()">删除</a><a href="javascript:void(0)" class="easyui-linkbutton"
 				data-options="iconCls:'icon-search',plain:true" style="width: 100px;height:30px"
-				onclick="queplan()">交货计划</a></td>
-					</tr>
-					<tr style="width: 100%">
-						<th style="text-align: center; width: 3%">选择</th>
-						<th style="text-align: center; width: 3%">项目</th>
-						<th style="text-align: center; width: 10%">硅片晶体</th>
-						<th style="text-align: center; width: 10%">主珊</th>
-						<th style="text-align: center; width: 10%">工艺</th>
-						<th style="text-align: center; width: 5%">转换率（%）</th>
-						<th style="text-align: center; width: 5%">等级</th>
-						<th style="text-align: center; width: 10%">数量</th>
-						<th style="text-align: center; width: 10%">单位</th>
-						<th style="text-align: center; width: 10%">单价</th>
-						<th style="text-align: center; width: 10%">金额</th>
-						<th style="text-align: center; width: 10%">交货状态</th>
-						<th style="text-align: center; width: 10%">发票状态</th>
-					</tr>
+				onclick="queplan()">交货计划</a>
+				<a href="javascript:void(0)"
+							class="easyui-linkbutton" id="addWLBM"
+							data-options="iconCls:'icon-add',plain:true" onclick="addWLBM()">物料编码</a>
+				</td>
 			</table>
 			<table style="width:100%">
 				<tr style="background-color: #CAE1FF; height: 30px;">
@@ -828,11 +955,11 @@ $.ajax({
 			<table style="width: 100%;">
 				<tr style="background-color: #CAE1FF; height: 30px;">
 					<td colspan="11"><center>
-							<input style="width: 60px; height: 35px; border-radius: 5px;"
-									type="submit" value="提交">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+							<input style="width: 70px; height: 35px; border-radius: 5px;" id="tjsap"
+									type="submit" value="提交SAP">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 									style="width: 80px; height: 35px; border-radius: 5px;"
 									onclick="chakanlc()" type="button" value="查看流程">
-									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="ch"
 									style="width: 60px; height: 35px; border-radius: 5px;"
 									onclick="chehui()" type="button" value="撤回">
 						</center></td>
@@ -859,6 +986,15 @@ $.ajax({
 				data-options="iconCls:'icon-search'" style="width: 80px"
 				onclick="getemp2()">获取数据</a>
 		<table id="empt2"></table>
+	</div>
+	<div id="wl1" class="easyui-window" title="物料编码" data-options="modal:true,closed:true,iconCls:'icon-save'" style="width:550px;height:300px;">
+		<center>物料信息：<input style="width: 200px" class="easyui-textbox"
+							id="wlinfo2" type="text"
+							data-options="prompt:'输入物料信息（编码或描述）',required:false" />
+		<a href="javascript:void(0)" class="easyui-linkbutton"
+				data-options="iconCls:'icon-search'" style="width: 80px"
+				onclick="getWLInfo()">获取数据</a></center>
+		<table id="wlif1"></table>
 	</div>
 </body>
 

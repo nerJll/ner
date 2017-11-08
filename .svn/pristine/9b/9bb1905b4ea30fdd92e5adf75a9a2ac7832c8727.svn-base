@@ -57,18 +57,18 @@ public class SAPUtils {
 */			.setValue("VBELN", "123455")  //合同号
 			.setValue("BSTKD", "334455")  //采购编号
 			.setValue("BSTZD", "双经销")  //业务模式
-			.setValue("VKORG", "334455")  //销售组织
-			.setValue("VTWEG", "334455")  //分销渠道
-			.setValue("VKGRP", "334455")  //销售组
-			.setValue("KUNNR", "334455")  //客户编号
-			.setValue("PERNR", "334455")  //雇员编码
-			.setValue("AUDAT", "2017-09-11")  //创建日期
-			.setValue("GUEBG", "2017-09-15")  //起始日期
-			.setValue("GUEEN", "2017-09-19")  //终止日期
-			.setValue("ZLSCH", "334455")  //付款方式
-			.setValue("WAERK", "334455")  //货币类型
-			.setValue("INC01", "334455")  //贸易条款
-			
+	/*		.setValue("VKORG", contract.getSaleOrg())  //销售组织
+			.setValue("VTWEG", contract.getSaleWay())  //分销渠道
+			.setValue("VKGRP", contract.getSaleGroup())  //销售组
+			.setValue("KUNNR", contract.getCustomerNo())  //客户编号
+			.setValue("PERNR", contract.getEmployee())  //雇员编码
+			.setValue("AUDAT", DateUtil.getDateFormat(contract.getCreateTime()))  //创建日期
+			.setValue("GUEBG", DateUtil.getDateFormat(contract.getStaTime()))  //起始日期
+			.setValue("GUEEN", DateUtil.getDateFormat(contract.getEndTime()))  //终止日期
+			.setValue("ZLSCH", contract.getPaymentWay())  //付款方式
+			.setValue("WAERK", contract.getCurrency())  //货币类型
+			.setValue("INC01", contract.getTradeTerm())  //贸易条款
+*/			
 		);
 		
 		// PRACCOUNT参数
@@ -98,21 +98,20 @@ public class SAPUtils {
 		// PRACCOUNT参数
 		List<JcoParams> praccountxList = new ArrayList<JcoParams>();
 		//params.setValue("PRACCOUNTX", praccountxList);
-		for(int i=0; i<plans.size(); i++){
+		/*for(int i=0; i<plans.size(); i++){
 			praccountxList.add(
 					new JcoParams()
-					/*.setValue("VBELN", contract.getContractNo())
-					.setValue("POSNR", plans.get(i).getResOne())
-					.setValue("ETENR", plans.get(i).getPlanNo())
-					.setValue("EDATU", DateUtil.getDateFormat(plans.get(i).getPlanDate()))
-					.setValue("WMENG", plans.get(i).getMount())*/
-					.setValue("VBELN", "123455")
-					.setValue("POSNR", "123321")
-					.setValue("ETENR", i+1)
+					/*.setValue("POSNR", "123")
+					.setValue("ETENR", "123")
+					.setValue("POSNR", 123)*/
+					/*.setValue("ETENR", 123)
 					.setValue("EDATU", "2017-09-01")
-					.setValue("WMENG", "22")
+					.setValue("WMENG", 123)
+					.setValue("VRKME", "123")
+					.setValue("KBETR", "123")
+					.setValue("KBETR", 123)
 				);
-		}
+		}*/
 		
 		JcoResult result = SapApi.executeFunction(functionName, params);
 		long end=System.currentTimeMillis();
